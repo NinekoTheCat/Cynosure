@@ -13,14 +13,14 @@ import uwu.serenity.kritter.api.entry
 import uwu.serenity.kritter.api.entry.RegistryEntry
 import kotlin.properties.PropertyDelegateProvider
 
-public fun <T : Recipe<T>> Registrar<RecipeType<*>>.recipeType(): PropertyDelegateProvider<Any?, RegistryEntry<RecipeType<T>>> = PropertyDelegateProvider { thisRef, property ->
+public fun <T : Recipe<*>> Registrar<RecipeType<*>>.recipeType(): PropertyDelegateProvider<Any?, RegistryEntry<RecipeType<T>>> = PropertyDelegateProvider { thisRef, property ->
     this.recipeType(property.name)
 }
 
-public inline fun <T : Recipe<T>> Registrar<RecipeType<*>>.recipeType(name: String, builder: GenericBuilder<RecipeType<*>, RecipeType<T>>.() -> Unit = {}): RegistryEntry<RecipeType<T>> =
+public inline fun <T : Recipe<*>> Registrar<RecipeType<*>>.recipeType(name: String, builder: GenericBuilder<RecipeType<*>, RecipeType<T>>.() -> Unit = {}): RegistryEntry<RecipeType<T>> =
     entry<_, RecipeType<T>>(name, ::SimpleRecipeType).apply(builder).register()
 
-public inline fun <T : Recipe<T>> Registrar<RecipeSerializer<*>>.codecSerializer(
+public inline fun <T : Recipe<*>> Registrar<RecipeSerializer<*>>.codecSerializer(
     name: String,
     noinline codec: (ResourceLocation) -> Codec<T>,
     noinline networkCodec: (ResourceLocation) -> ByteCodec<T>,
