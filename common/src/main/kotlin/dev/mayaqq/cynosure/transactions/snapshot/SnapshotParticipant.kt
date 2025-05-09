@@ -4,6 +4,7 @@ import dev.mayaqq.cynosure.transactions.CloseListener
 import dev.mayaqq.cynosure.transactions.OuterCloseListener
 import dev.mayaqq.cynosure.transactions.TransactionContext
 import dev.mayaqq.cynosure.transactions.TransactionResult
+import net.minecraft.world.item.ItemStack
 
 public abstract class SnapshotParticipant<T : Any> : CloseListener, OuterCloseListener {
     private val snapshots: MutableList<T?> = mutableListOf()
@@ -16,39 +17,41 @@ public abstract class SnapshotParticipant<T : Any> : CloseListener, OuterCloseLi
 
     protected open fun onFinalCommit() {}
 
-    protected fun updateSnapshots(context: TransactionContext) {
-        if (snapshots.getOrNull(context.nestingDepth) == null) {
-            if (snapshots.size < context.nestingDepth) {
-                val nulls = arrayOfNulls<Any>(context.nestingDepth - snapshots.size)
+    protected fun TransactionContext.updateSnapshots() {
+        if (snapshots.getOrNull(nestingDepth) == null) {
+            if (snapshots.size < nestingDepth) {
+                val nulls = arrayOfNulls<Any>(nestingDepth - snapshots.size)
                 snapshots.addAll(nulls as Array<T?>)
             }
-            snapshots[context.nestingDepth] = createSnapshot()
-            context.addOuterCloseListener(this)
+            snapshots[nestingDepth] = createSnapshot()
+            addOuterCloseListener(this@SnapshotParticipant)
         }
     }
 
     final override fun TransactionContext.onClose(result: TransactionResult) {
-        val snapshot = this@SnapshotParticipant.snapshots.set(nestingDepth, null) ?: return
-
+        val snapshot = snapshots.set(nestingDepth, null) ?: return
         when {
             result == TransactionResult.ABORTED -> {
-                this@SnapshotParticipant.readSnapshot(snapshot)
-                this@SnapshotParticipant.discardSnapshot(snapshot)
+                readSnapshot(snapshot)
+                discardSnapshot(snapshot)
             }
             nestingDepth > 0 -> {
-                if (this@SnapshotParticipant.snapshots.getOrNull(nestingDepth -1) == null) {
-                    this@SnapshotParticipant.snapshots[nestingDepth - 1] = snapshot
+                if (snapshots.getOrNull(nestingDepth -1) == null) {
+                    snapshots[nestingDepth - 1] = snapshot
                     this[nestingDepth - 1]?.addCloseListener(this@SnapshotParticipant)
                 } else {
-                    this@SnapshotParticipant.discardSnapshot(snapshot)
+                    discardSnapshot(snapshot)
+                    ItemStack.CODEC
                 }
             }
             else -> {
-                this@SnapshotParticipant.discardSnapshot(snapshot)
+                discardSnapshot(snapshot)
                 addOuterCloseListener(this@SnapshotParticipant)
             }
         }
     }
 
-    final override fun onOuterClose(result: TransactionResult) {}
+    final override fun onOuterClose(result: TransactionResult) {
+        onFinalCommit()
+    }
 }

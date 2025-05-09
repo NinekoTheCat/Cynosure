@@ -36,7 +36,7 @@ internal fun generateASMEventListener(className: String, methodName: String, met
 
     cw.visit(
         V17, ACC_PUBLIC,
-        "dev/mayaqq/cynosure/events/internal/${className.replace('/', '_')}\$EventListener$$methodName$${event.hashCode()}",
+        "dev/mayaqq/cynosure/events/internal/${className.replace('/', '_')}\$EventListener$$methodName$${event.hashCode().toString(16)}",
         null, "java/lang/Object", arrayOf("java/util/function/Consumer")
     )
 

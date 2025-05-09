@@ -9,7 +9,9 @@ import dev.mayaqq.cynosure.transactions.TransactionContext
 @PublishedApi
 internal object TransactionManagerAccess {
 
+    @JvmStatic
     fun openOuter() = LocalManager.openOuter()
 
+    @JvmStatic
     fun openInner(current: TransactionContext): Transaction = (current as TransactionManager.TransactionImpl).openInner()
 }

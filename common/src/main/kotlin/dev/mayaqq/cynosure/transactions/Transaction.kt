@@ -1,13 +1,16 @@
 package dev.mayaqq.cynosure.transactions
 
-import java.lang.AutoCloseable
+import dev.mayaqq.cynosure.transactions.internal.LocalManager
+import org.jetbrains.annotations.ApiStatus.NonExtendable
 
+@NonExtendable
 public abstract class Transaction protected constructor(
     override val nestingDepth: Int
 ) : TransactionContext, AutoCloseable {
 
     public abstract val lifecycle: Lifecycle
 
+    // val variants so u can use commit and abort like keywords
     @TransactionsDsl
     public inline val commit: Unit
         get() { commit() }
@@ -37,5 +40,19 @@ public abstract class Transaction protected constructor(
         OPEN,
         CLOSING,
         OUTER_CLOSING
+    }
+
+    public companion object {
+
+        @DelicateTransactionApi
+        public val current: Transaction?
+            get() = LocalManager.getCurrentUnsafe()
+
+        public val isOpen: Boolean
+            get() = LocalManager.isOpen
+
+        public val lifecycle: Lifecycle
+            get() = LocalManager.lifecycle
+
     }
 }

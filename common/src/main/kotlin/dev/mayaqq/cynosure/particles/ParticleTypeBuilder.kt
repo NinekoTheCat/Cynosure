@@ -47,7 +47,7 @@ public class CynosureParticleTypeBuilder<T : CynosureParticleOptions<T>>(
 
     public var overrideLimiter: Boolean = false
 
-    public lateinit var fromCommand: (StringReader) -> CynosureParticleOptions<T>
+    public lateinit var fromCommand: (StringReader) -> T
 
     @NotUsableInBuilder
     @CynosureInternal
@@ -57,7 +57,7 @@ public class CynosureParticleTypeBuilder<T : CynosureParticleOptions<T>>(
         if (::fromCommand.isInitialized) {
             val fromCommand = fromCommand
             return object : CynosureParticleType<T>(codec, networkCodec, overrideLimiter) {
-                override fun fromCommand(reader: StringReader): CynosureParticleOptions<T> = fromCommand(reader)
+                override fun fromCommand(reader: StringReader): T = fromCommand(reader)
             }
         } else return CynosureParticleType(codec, networkCodec, overrideLimiter)
     }

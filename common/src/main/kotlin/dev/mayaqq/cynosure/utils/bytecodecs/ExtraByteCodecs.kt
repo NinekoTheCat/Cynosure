@@ -3,6 +3,8 @@ package dev.mayaqq.cynosure.utils.bytecodecs
 import com.teamresourceful.bytecodecs.base.ByteCodec
 import com.teamresourceful.bytecodecs.base.`object`.ObjectByteCodec
 import com.teamresourceful.bytecodecs.utils.ByteBufUtils
+import dev.mayaqq.cynosure.utils.bytecodecs.item.ItemStackByteCodec
+import dev.mayaqq.cynosure.utils.codecs.IngredientCodec
 import dev.mayaqq.cynosure.utils.codecs.fieldOf
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufInputStream
@@ -17,12 +19,15 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 import org.joml.Vector3f
 import java.io.IOException
 import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Code modified from [Resourcefullib](https://github.com/Team-Resourceful/Resourcefullib) by Team Resourceful.
@@ -71,7 +76,7 @@ public object ExtraByteCodecs {
 
     @JvmField
     public val NULLABLE_COMPOUND_TAG: ByteCodec<CompoundTag?> = CompoundTagByteCodec
-        .map(fun(value) = value.orElse(null), fun(tag) = Optional.ofNullable(tag))
+        .map(Optional<CompoundTag>::getOrNull, fun(tag) = Optional.ofNullable(tag))
 
     @JvmField
     public val NONNULL_COMPOUND_TAG: ByteCodec<CompoundTag> = CompoundTagByteCodec
@@ -86,6 +91,12 @@ public object ExtraByteCodecs {
 
     @JvmField
     public val ITEM: ByteCodec<Item> = registry(BuiltInRegistries.ITEM)
+
+    @JvmField
+    public val ITEM_STACK: ByteCodec<ItemStack> = ItemStackByteCodec
+
+    @JvmField
+    public val INGREDIENT: ByteCodec<Ingredient> = IngredientCodec.NETWORK
 
     @JvmStatic
     public fun <T, R : Registry<T>> resourceKey(registry: ResourceKey<R>): ByteCodec<ResourceKey<T>> {
@@ -146,3 +157,4 @@ public class IdMapByteCodec<T>(public val map: IdMap<T>) : ByteCodec<T> {
         return requireNotNull(map.byId(id)) { "Cant find value for id '$id' in map $map" }
     }
 }
+

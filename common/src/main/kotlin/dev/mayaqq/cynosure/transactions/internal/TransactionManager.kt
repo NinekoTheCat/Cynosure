@@ -1,10 +1,6 @@
 package dev.mayaqq.cynosure.transactions.internal
 
-import dev.mayaqq.cynosure.transactions.CloseListener
-import dev.mayaqq.cynosure.transactions.OuterCloseListener
-import dev.mayaqq.cynosure.transactions.Transaction
-import dev.mayaqq.cynosure.transactions.TransactionContext
-import dev.mayaqq.cynosure.transactions.TransactionResult
+import dev.mayaqq.cynosure.transactions.*
 import dev.mayaqq.cynosure.utils.getValue
 import dev.mayaqq.cynosure.utils.result.failure
 import dev.mayaqq.cynosure.utils.result.unit
@@ -40,6 +36,11 @@ internal class TransactionManager {
     fun validateThread() {
         val current = Thread.currentThread()
         require(current == thread) { "Attempted to access transation from thread ${thread.name} on ${current.name}" }
+    }
+
+    fun getCurrentUnsafe(): Transaction? {
+        validateThread()
+        return stack[currentDepth].takeIf { it.lifecycle == Transaction.Lifecycle.OPEN }
     }
 
     internal inner class TransactionImpl(depth: Int) : Transaction(depth) {
@@ -96,7 +97,10 @@ internal class TransactionManager {
             closeCallbacks.add(listener)
         }
 
-        override fun get(depth: Int): Transaction? = stack.getOrNull(depth)?.let { if (it.lifecycle == Lifecycle.OPEN) it else null }
+        override fun get(depth: Int): Transaction? {
+            validateThread()
+            return stack.getOrNull(depth)?.takeIf { it.lifecycle == Lifecycle.OPEN }
+        }
     }
 
 
