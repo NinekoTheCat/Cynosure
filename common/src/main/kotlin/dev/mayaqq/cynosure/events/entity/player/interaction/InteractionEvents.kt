@@ -17,7 +17,7 @@ public sealed class InteractionEvent(
     public val hand: InteractionHand
 ) : InteractionResultEvent() {
 
-    public class UseEnitity(
+    public class UseEntity(
         level: Level,
         player: Player,
         hand: InteractionHand,

@@ -85,10 +85,10 @@ public fun onPlayerInteract(event: PlayerInteractEvent) {
         is PlayerInteractEvent.LeftClickBlock -> InteractionEvent.AttackBlock(
             event.level, event.entity, event.hand, event.pos, event.face!!
         ).post(context = event)
-        is PlayerInteractEvent.EntityInteractSpecific -> InteractionEvent.UseEnitity(
+        is PlayerInteractEvent.EntityInteractSpecific -> InteractionEvent.UseEntity(
             event.level, event.entity, event.hand, event.target, event.localPos
         ).post(context = event)
-        is PlayerInteractEvent.EntityInteract -> InteractionEvent.UseEnitity(
+        is PlayerInteractEvent.EntityInteract -> InteractionEvent.UseEntity(
             event.level, event.entity, event.hand, event.target, null
         ).post(context = event)
         is PlayerInteractEvent.RightClickItem -> InteractionEvent.UseItem(

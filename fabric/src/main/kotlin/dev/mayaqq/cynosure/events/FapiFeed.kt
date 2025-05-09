@@ -62,7 +62,7 @@ internal fun fapiFeed() {
     }
     UseEntityCallback.EVENT.register { player, world, hand, entity, hitResult ->
         if (player.isSpectator) return@register InteractionResult.PASS
-        InteractionEvent.UseEnitity(
+        InteractionEvent.UseEntity(
             world, player, hand, entity,
             hitResult?.location?.subtract(entity.position())
         ).post() ?: InteractionResult.PASS
