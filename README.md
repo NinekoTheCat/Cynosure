@@ -21,4 +21,4 @@ _* While the library is usable in a java-only enviroment, it is not recommended 
 - And more!
   
 [![Discord](https://cdn.modrinth.com/data/4JVfdODB/images/d13493b05dcb158e58ecde3a3f5de5a39f3c3b53.png)](https://discord.gg/hue)
-[![Bisect](https://cdn.modrinth.com/data/4JVfdODB/images/da895aaf7614ed5ed6159d8de72d95aa41e066f0.png)](https://server.mayaqq.dev)
+[![Bisect](https://cdn.modrinth.com/data/4JVfdODB/images/a1d33136a38271a8372ada25bbafd7ce69ff8aa7.png)](https://server.mayaqq.dev)
