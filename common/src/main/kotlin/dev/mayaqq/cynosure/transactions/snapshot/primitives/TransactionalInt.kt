@@ -1,6 +1,7 @@
-package dev.mayaqq.cynosure.transactions.snapshot
+package dev.mayaqq.cynosure.transactions.snapshot.primitives
 
 import dev.mayaqq.cynosure.transactions.TransactionContext
+import dev.mayaqq.cynosure.transactions.snapshot.SnapshotParticipant
 
 public class TransactionalInt(
     initial: Int
@@ -10,10 +11,18 @@ public class TransactionalInt(
         private set
 
     context(TransactionContext)
-    public fun increment(): Int {
+    public fun increment(by: Int = 1): Int {
         updateSnapshots()
         val v = value
-        value++
+        value += by
+        return v
+    }
+
+    context(TransactionContext)
+    public fun decrement(by: Int = 1): Int {
+        updateSnapshots()
+        val v = value
+        value -= by
         return v
     }
 
