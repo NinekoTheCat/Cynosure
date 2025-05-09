@@ -12,8 +12,8 @@ import net.minecraft.network.FriendlyByteBuf
 
 @Suppress("UNCHECKED_CAST")
 public open class CynosureParticleType<T : CynosureParticleOptions<T>>(
-    public open val codec: Codec<T>,
-    public open val networkCodec: ByteCodec<T>,
+    public val codec: Codec<T>,
+    public val networkCodec: ByteCodec<T>,
     overrideLimiter: Boolean = false
 ) : ParticleType<T>(overrideLimiter, EnhancedDeserializer as ParticleOptions.Deserializer<T>) {
 
@@ -21,7 +21,7 @@ public open class CynosureParticleType<T : CynosureParticleOptions<T>>(
 
     final override fun codec(): Codec<T> = codec
 
-    protected open fun fromCommand(reader: StringReader): CynosureParticleOptions<T> {
+    protected open fun fromCommand(reader: StringReader): T {
         reader.expect(' ')
         return codec.parse(NbtOps.INSTANCE, TagParser(reader).readValue())
             .getOrThrow(false, Cynosure::error)
@@ -47,4 +47,6 @@ public interface CynosureParticleOptions<S : CynosureParticleOptions<S>> : Parti
     override fun writeToNetwork(p0: FriendlyByteBuf) {
         type.networkCodec.encode(this as S, p0)
     }
+
+    override fun writeToString(): String = toString()
 }

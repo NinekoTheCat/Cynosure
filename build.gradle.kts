@@ -130,7 +130,7 @@ subprojects {
 
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {
-            this.freeCompilerArgs.addAll("-Xjvm-default=all-compatibility")
+            this.freeCompilerArgs.addAll("-Xjvm-default=all-compatibility", "-Xcontext-receivers")
         }
     }
 }

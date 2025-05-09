@@ -5,8 +5,7 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import com.mojang.serialization.DynamicOps
 
-public class RecursiveCodec<T> internal constructor(private val name: String, wrapped: (Codec<T>) -> Codec<T>) :
-    Codec<T> {
+public class RecursiveCodec<T> internal constructor(private val name: String, wrapped: (Codec<T>) -> Codec<T>) : Codec<T> {
 
     private val wrapped: Codec<T> by lazy { wrapped(this) }
 
