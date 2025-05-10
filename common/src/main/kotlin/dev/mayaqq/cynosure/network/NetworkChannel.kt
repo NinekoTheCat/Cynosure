@@ -4,12 +4,15 @@ import com.google.common.collect.HashBasedTable
 import com.google.common.collect.Table
 import com.teamresourceful.bytecodecs.base.ByteCodec
 import dev.mayaqq.cynosure.CynosureInternal
+import dev.mayaqq.cynosure.entities.PlayerLookup
 import dev.mayaqq.cynosure.network.serialization.KByteCodec
+import dev.mayaqq.cynosure.utils.GameInstance
 import dev.mayaqq.cynosure.utils.set
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializerOrNull
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerChunkCache
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
@@ -86,6 +89,10 @@ public class NetworkChannel(
 
     public fun <T : Any> broadcast(packet: T, players: Collection<Player>) {
         for (player in players) sendToPlayer(packet, player)
+    }
+
+    public fun <T : Any> broadcast(packet: T, server: MinecraftServer = GameInstance.currentServer!!) {
+        broadcast(packet, PlayerLookup.all(server))
     }
 
     public fun <T : Any> broadcast(packet: T, level: Level) {
