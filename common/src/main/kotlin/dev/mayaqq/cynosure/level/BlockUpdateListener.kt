@@ -19,7 +19,7 @@ public interface BlockUpdateListener {
     /**
      * Called after each update before [onBlockUpdate], if this returns true the listener will be removed from the level
      */
-    public fun shouldRemove(): Boolean
+    public fun shouldRemove(level: ServerLevel): Boolean
 
     /**
      * Handle block updates here. Note that the provided [BlockPos] and [BlockState] are of the

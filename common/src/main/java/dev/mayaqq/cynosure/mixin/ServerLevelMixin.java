@@ -39,7 +39,7 @@ public class ServerLevelMixin extends LevelMixin {
         long longPos = pos.asLong();
         BlockUpdateListener listener = cynosure$updateListeners.get(longPos);
         if (listener != null) {
-            if (listener.shouldRemove()) cynosure$updateListeners.remove(longPos);
+            if (listener.shouldRemove((ServerLevel) (Object) this)) cynosure$updateListeners.remove(longPos);
             else listener.onBlockUpdate((ServerLevel) (Object) this, pos, state);
         }
     }
