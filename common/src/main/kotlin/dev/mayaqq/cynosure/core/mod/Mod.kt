@@ -1,4 +1,4 @@
-package dev.mayaqq.cynosure.utils.mod
+package dev.mayaqq.cynosure.core.mod
 
 public data class Mod(
     val modid: String,

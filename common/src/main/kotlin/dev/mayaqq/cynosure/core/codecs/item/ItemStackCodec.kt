@@ -1,8 +1,8 @@
-package dev.mayaqq.cynosure.utils.codecs.item
+package dev.mayaqq.cynosure.core.codecs.item
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
-import dev.mayaqq.cynosure.utils.codecs.Codecs
+import dev.mayaqq.cynosure.core.codecs.Codecs
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.ItemStack
 import java.util.function.Function

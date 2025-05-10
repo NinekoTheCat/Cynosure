@@ -1,8 +1,8 @@
 package dev.mayaqq.cynosure.items
 
 import dev.mayaqq.cynosure.CynosureInternal
-import dev.mayaqq.cynosure.extensions.Extension
-import dev.mayaqq.cynosure.extensions.ExtensionRegistry
+import dev.mayaqq.cynosure.core.extensions.Extension
+import dev.mayaqq.cynosure.core.extensions.ExtensionRegistry
 import dev.mayaqq.cynosure.internal.CynosureHooks
 import dev.mayaqq.cynosure.items.ItemExtension.Registry.register
 import net.minecraft.client.player.AbstractClientPlayer

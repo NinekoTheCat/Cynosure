@@ -1,4 +1,4 @@
-package dev.mayaqq.cynosure.utils
+package dev.mayaqq.cynosure.core
 
 import dev.mayaqq.cynosure.internal.loadPlatform
 import net.minecraft.server.MinecraftServer

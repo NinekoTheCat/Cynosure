@@ -1,4 +1,4 @@
-package dev.mayaqq.cynosure.utils
+package dev.mayaqq.cynosure.core
 
 public enum class TriState {
     TRUE,

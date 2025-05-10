@@ -1,9 +1,7 @@
-package dev.mayaqq.cynosure.extensions
+package dev.mayaqq.cynosure.core.extensions
 
 import dev.mayaqq.cynosure.Cynosure
 import java.util.*
-
-public interface Extension<T : Any>
 
 public abstract class ExtensionRegistry<T : Any, Ext : Extension<T>>(
     private val baseClass: Class<T>,
@@ -44,6 +42,3 @@ public abstract class ExtensionRegistry<T : Any, Ext : Extension<T>>(
     }
 
 }
-
-public inline fun <T : Any, reified E : Extension<T>> ExtensionRegistry<T, in E>.getExtension(value: T): E? =
-    getExtension(E::class.java, value)

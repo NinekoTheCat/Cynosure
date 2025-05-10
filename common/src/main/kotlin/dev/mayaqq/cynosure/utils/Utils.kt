@@ -2,6 +2,7 @@ package dev.mayaqq.cynosure.utils
 
 import com.google.common.collect.MapMaker
 import com.google.common.collect.Table
+import dev.mayaqq.cynosure.core.Environment
 import net.minecraft.world.level.Level
 import java.util.*
 import kotlin.contracts.ExperimentalContracts

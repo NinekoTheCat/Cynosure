@@ -1,11 +1,11 @@
-package dev.mayaqq.cynosure.utils.bytecodecs
+package dev.mayaqq.cynosure.core.bytecodecs
 
 import com.teamresourceful.bytecodecs.base.ByteCodec
 import com.teamresourceful.bytecodecs.base.`object`.ObjectByteCodec
 import com.teamresourceful.bytecodecs.utils.ByteBufUtils
-import dev.mayaqq.cynosure.utils.bytecodecs.item.ItemStackByteCodec
-import dev.mayaqq.cynosure.utils.codecs.IngredientCodec
-import dev.mayaqq.cynosure.utils.codecs.fieldOf
+import dev.mayaqq.cynosure.core.bytecodecs.item.ItemStackByteCodec
+import dev.mayaqq.cynosure.core.codecs.IngredientCodec
+import dev.mayaqq.cynosure.core.codecs.fieldOf
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufInputStream
 import io.netty.buffer.ByteBufOutputStream

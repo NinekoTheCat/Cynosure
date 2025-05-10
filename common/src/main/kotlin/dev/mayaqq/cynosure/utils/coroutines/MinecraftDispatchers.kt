@@ -1,5 +1,8 @@
 package dev.mayaqq.cynosure.utils.coroutines
 
+import dev.mayaqq.cynosure.core.Environment
+import dev.mayaqq.cynosure.core.GameInstance
+import dev.mayaqq.cynosure.core.PlatformHooks
 import dev.mayaqq.cynosure.utils.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

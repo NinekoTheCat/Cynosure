@@ -1,9 +1,9 @@
-package dev.mayaqq.cynosure.utils.bytecodecs.item
+package dev.mayaqq.cynosure.core.bytecodecs.item
 
 import com.teamresourceful.bytecodecs.base.ByteCodec
 import com.teamresourceful.bytecodecs.base.`object`.ObjectByteCodec
-import dev.mayaqq.cynosure.utils.bytecodecs.ExtraByteCodecs
-import dev.mayaqq.cynosure.utils.codecs.fieldOf
+import dev.mayaqq.cynosure.core.bytecodecs.ExtraByteCodecs
+import dev.mayaqq.cynosure.core.codecs.fieldOf
 import net.minecraft.world.item.ItemStack
 
 public object ItemStackByteCodec : ByteCodec<ItemStack> by ByteCodec.BYTE.dispatch(ItemStackByteCodec::pickByteCodec, ItemStackByteCodec::getType) {

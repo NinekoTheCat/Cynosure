@@ -1,4 +1,4 @@
-package dev.mayaqq.cynosure.utils.bytecodecs
+package dev.mayaqq.cynosure.core.bytecodecs
 
 import com.teamresourceful.bytecodecs.base.ByteCodec
 import io.netty.buffer.ByteBuf

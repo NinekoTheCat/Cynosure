@@ -1,8 +1,8 @@
-package dev.mayaqq.cynosure.utils.codecs.advancements
+package dev.mayaqq.cynosure.core.codecs.advancements
 
 import com.mojang.serialization.*
-import dev.mayaqq.cynosure.utils.bytecodecs.toByteCodec
-import dev.mayaqq.cynosure.utils.codecs.Codecs
+import dev.mayaqq.cynosure.core.bytecodecs.toByteCodec
+import dev.mayaqq.cynosure.core.codecs.Codecs
 import net.minecraft.advancements.critereon.*
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey

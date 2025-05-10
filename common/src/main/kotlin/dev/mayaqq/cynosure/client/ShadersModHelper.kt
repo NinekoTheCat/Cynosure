@@ -1,6 +1,6 @@
 package dev.mayaqq.cynosure.client
 
-import dev.mayaqq.cynosure.utils.isModLoaded
+import dev.mayaqq.cynosure.core.isModLoaded
 import net.irisshaders.iris.api.v0.IrisApi
 import java.lang.invoke.LambdaMetafactory
 import java.lang.invoke.MethodHandles

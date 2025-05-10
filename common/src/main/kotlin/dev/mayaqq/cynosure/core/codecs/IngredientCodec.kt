@@ -1,4 +1,4 @@
-package dev.mayaqq.cynosure.utils.codecs
+package dev.mayaqq.cynosure.core.codecs
 
 import com.google.gson.JsonElement
 import com.mojang.serialization.Codec
@@ -6,7 +6,7 @@ import com.mojang.serialization.DataResult
 import com.mojang.serialization.Dynamic
 import com.mojang.serialization.JsonOps
 import com.teamresourceful.bytecodecs.base.ByteCodec
-import dev.mayaqq.cynosure.utils.bytecodecs.FriendlyByteCodec
+import dev.mayaqq.cynosure.core.bytecodecs.FriendlyByteCodec
 import net.minecraft.world.item.crafting.Ingredient
 
 public object IngredientCodec : Codec<Ingredient> by Codec.PASSTHROUGH.comapFlatMap(

@@ -5,12 +5,12 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.teamresourceful.bytecodecs.base.ByteCodec
 import dev.mayaqq.cynosure.utils.atMost
-import dev.mayaqq.cynosure.utils.codecs.Codecs
-import dev.mayaqq.cynosure.utils.codecs.fieldOf
-import dev.mayaqq.cynosure.utils.codecs.forGetter
-import dev.mayaqq.cynosure.utils.foldToLeft
+import dev.mayaqq.cynosure.core.codecs.Codecs
+import dev.mayaqq.cynosure.core.codecs.fieldOf
+import dev.mayaqq.cynosure.core.codecs.forGetter
+import dev.mayaqq.cynosure.core.foldToLeft
 import dev.mayaqq.cynosure.utils.result.*
-import dev.mayaqq.cynosure.utils.toCynosure
+import dev.mayaqq.cynosure.core.toCynosure
 import kotlinx.serialization.Serializable
 
 public fun Color(red: Int, green: Int, blue: Int, alpha: Int = 255): Color =

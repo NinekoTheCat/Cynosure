@@ -6,7 +6,7 @@ import com.teamresourceful.bytecodecs.base.ByteCodec
 import dev.mayaqq.cynosure.CynosureInternal
 import dev.mayaqq.cynosure.entities.PlayerLookup
 import dev.mayaqq.cynosure.network.serialization.KByteCodec
-import dev.mayaqq.cynosure.utils.GameInstance
+import dev.mayaqq.cynosure.core.GameInstance
 import dev.mayaqq.cynosure.utils.set
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializerOrNull

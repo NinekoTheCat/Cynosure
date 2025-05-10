@@ -1,4 +1,4 @@
-package dev.mayaqq.cynosure.utils.codecs
+package dev.mayaqq.cynosure.core.codecs
 
 import com.google.gson.JsonElement
 import com.mojang.serialization.*

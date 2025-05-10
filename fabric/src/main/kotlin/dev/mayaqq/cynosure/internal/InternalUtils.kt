@@ -1,7 +1,7 @@
 package dev.mayaqq.cynosure.internal
 
-import dev.mayaqq.cynosure.utils.TriState
-import dev.mayaqq.cynosure.utils.toTriState
+import dev.mayaqq.cynosure.core.TriState
+import dev.mayaqq.cynosure.core.toTriState
 import net.fabricmc.loader.api.metadata.CustomValue
 import net.fabricmc.loader.api.metadata.CustomValue.CvArray
 import net.fabricmc.loader.api.metadata.CustomValue.CvObject

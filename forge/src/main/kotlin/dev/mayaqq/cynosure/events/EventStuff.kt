@@ -7,8 +7,8 @@ import dev.mayaqq.cynosure.events.api.EventSubscriber
 import dev.mayaqq.cynosure.events.api.MainBus
 import dev.mayaqq.cynosure.events.internal.CynosureEventLogger
 import dev.mayaqq.cynosure.events.internal.subscribeASMMethods
-import dev.mayaqq.cynosure.utils.Environment
-import dev.mayaqq.cynosure.utils.PlatformHooks
+import dev.mayaqq.cynosure.core.Environment
+import dev.mayaqq.cynosure.core.PlatformHooks
 import dev.mayaqq.cynosure.utils.asm.getClassByteArray
 import net.minecraftforge.fml.ModList
 import org.objectweb.asm.ClassReader

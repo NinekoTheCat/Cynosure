@@ -1,6 +1,10 @@
 package dev.mayaqq.cynosure.utils
 
-import dev.mayaqq.cynosure.utils.mod.Mod
+import dev.mayaqq.cynosure.core.Environment
+import dev.mayaqq.cynosure.core.GameInstance
+import dev.mayaqq.cynosure.core.Loader
+import dev.mayaqq.cynosure.core.PlatformHooks
+import dev.mayaqq.cynosure.core.mod.Mod
 import net.fabricmc.api.EnvType
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.Minecraft

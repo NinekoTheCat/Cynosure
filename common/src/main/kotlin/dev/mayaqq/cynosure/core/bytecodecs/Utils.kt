@@ -1,4 +1,4 @@
-package dev.mayaqq.cynosure.utils.bytecodecs
+package dev.mayaqq.cynosure.core.bytecodecs
 
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Codec
