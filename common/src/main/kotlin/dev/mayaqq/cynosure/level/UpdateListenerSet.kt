@@ -12,13 +12,13 @@ internal class UpdateListenerSet(vararg values: BlockUpdateListener) : BlockUpda
     override val listenedPositions: Iterable<BlockPos>
         get() = throw UnsupportedOperationException("Cant get listened positions of an update listener holder")
 
-    override fun shouldRemove(): Boolean {
+    override fun shouldRemove(level: ServerLevel): Boolean {
         if (listeners.isEmpty()) return true
         val iterator = listeners.iterator()
         var shouldRemove = true
         while (iterator.hasNext()) {
             val listener = iterator.next()
-            if (listener.shouldRemove()) iterator.remove() else shouldRemove = false
+            if (listener.shouldRemove(level)) iterator.remove() else shouldRemove = false
         }
         return shouldRemove
     }
