@@ -1,6 +1,7 @@
 package dev.mayaqq.cynosure.core.bytecodecs
 
 import com.teamresourceful.bytecodecs.base.ByteCodec
+import com.teamresourceful.bytecodecs.base.ObjectEntryByteCodec
 import com.teamresourceful.bytecodecs.base.`object`.ObjectByteCodec
 import com.teamresourceful.bytecodecs.utils.ByteBufUtils
 import dev.mayaqq.cynosure.core.bytecodecs.item.ItemStackByteCodec
@@ -33,7 +34,7 @@ import kotlin.jvm.optionals.getOrNull
  * Code modified from [Resourcefullib](https://github.com/Team-Resourceful/Resourcefullib) by Team Resourceful.
  * Licensed under MIT
  */
-public object ExtraByteCodecs {
+public object ByteCodecs {
 
     @JvmField
     public val RESOURCE_LOCATION: ByteCodec<ResourceLocation> =
@@ -113,6 +114,16 @@ public object ExtraByteCodecs {
         return LazyByteCodec { registry((BuiltInRegistries.REGISTRY as Registry<R>).get(key)!!) }
     }
 
+    /**
+     * [ObjectEntryByteCodec] version of [ByteCodec.unit]
+     */
+    @JvmStatic
+    public fun <O, T> constant(value: () -> T): ObjectEntryByteCodec<O, T> =
+        ByteCodec.unit(value) fieldOf { _ -> value() }
+
+    @JvmStatic
+    public fun <O, T> constant(value: T): ObjectEntryByteCodec<O, T> =
+        ByteCodec.unit(value) fieldOf { _ -> value }
 }
 
 public object CompoundTagByteCodec : ByteCodec<Optional<CompoundTag>> {

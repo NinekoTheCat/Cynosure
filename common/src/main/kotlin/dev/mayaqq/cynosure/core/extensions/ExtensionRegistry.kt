@@ -18,13 +18,13 @@ public abstract class ExtensionRegistry<T : Any, Ext : Extension<T>>(
      */
     @JvmOverloads
     public fun <E : Ext> register(value: T, extension: E, allowOverride: Boolean = false) {
-        val extensions = data.getOrPut(value, ::mutableMapOf)
+        val extensions = data.getOrPut(value, ::HashMap)
         val clazz = extension.javaClass
         require(!baseClass.isAssignableFrom(clazz))
         val eClasses = clazz.findExtensionInterfaces()
         for (eClass in eClasses) {
             require(!eClass.isAssignableFrom(value.javaClass)) { "$value already implements extension $eClass" }
-            if (!allowOverride) require(!extensions.containsKey(eClass))
+            require(allowOverride || !extensions.containsKey(eClass))
             extensions[eClass] = extension
         }
     }
@@ -33,8 +33,8 @@ public abstract class ExtensionRegistry<T : Any, Ext : Extension<T>>(
      *
      */
     public fun <E : Ext> getExtension(clazz: Class<E>, value: T): E? {
-        if (clazz.isAssignableFrom(value.javaClass)) return value as E
-        else return data[value]?.get(clazz) as? E
+        return if (clazz.isAssignableFrom(value.javaClass)) value as E
+        else data[value]?.get(clazz) as? E
     }
 
     private fun Class<*>.findExtensionInterfaces(): List<Class<*>> {
