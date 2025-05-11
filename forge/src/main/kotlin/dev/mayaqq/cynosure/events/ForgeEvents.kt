@@ -15,9 +15,9 @@ import dev.mayaqq.cynosure.events.entity.player.interaction.InteractionEvent
 import dev.mayaqq.cynosure.events.server.DataPackSyncEvent
 import dev.mayaqq.cynosure.events.server.ServerEvent
 import dev.mayaqq.cynosure.internal.CynosureHooksImpl
-import dev.mayaqq.cynosure.items.CustomEntityItem
-import dev.mayaqq.cynosure.items.CustomFurnaceFuel
-import dev.mayaqq.cynosure.items.getExtension
+import dev.mayaqq.cynosure.items.extensions.CustomEntityItem
+import dev.mayaqq.cynosure.items.extensions.CustomFurnaceFuel
+import dev.mayaqq.cynosure.items.extensions.getExtension
 import net.minecraft.server.TickTask
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer

@@ -8,6 +8,8 @@ public abstract class ExtensionRegistry<T : Any, Ext : Extension<T>>(
     private val baseExtension: Class<Ext>
 ) {
 
+    // TODO: Probably switch to using AttachedRegistry here somehow
+    // TODO: Add deferred registration
     private val data: MutableMap<T, MutableMap<Class<*>, Ext>> = Collections.synchronizedMap(IdentityHashMap())
 
     /**

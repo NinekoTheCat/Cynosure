@@ -2,7 +2,6 @@ package dev.mayaqq.cynosure.events.server
 
 import dev.mayaqq.cynosure.events.api.Event
 import net.minecraft.server.MinecraftServer
-import net.minecraft.world.entity.player.Player
 
 public sealed class ServerEvent(
     public val server: MinecraftServer
@@ -21,4 +20,3 @@ public sealed class ServerEvent(
     public class EndTick(server: MinecraftServer) : ServerEvent(server)
 }
 
-public class DataPackSyncEvent(public val player: Player, public val isJoin: Boolean) : Event

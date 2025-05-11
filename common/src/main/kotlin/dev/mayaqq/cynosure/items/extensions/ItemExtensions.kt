@@ -1,16 +1,17 @@
-package dev.mayaqq.cynosure.items
+package dev.mayaqq.cynosure.items.extensions
 
-import dev.mayaqq.cynosure.CynosureInternal
 import dev.mayaqq.cynosure.core.extensions.Extension
 import dev.mayaqq.cynosure.core.extensions.ExtensionRegistry
-import dev.mayaqq.cynosure.internal.CynosureHooks
-import dev.mayaqq.cynosure.items.ItemExtension.Registry.register
+import dev.mayaqq.cynosure.items.extensions.ItemExtension.Registry.register
 import net.minecraft.client.player.AbstractClientPlayer
+import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.Level
 
@@ -32,12 +33,6 @@ public fun <E : ItemExtension> Item.registerExtension(extension: E, allowOverrid
 
 public inline fun <reified E : ItemExtension> Item.getExtension(): E? =
     ItemExtension.getExtension(E::class.java, this)
-
-/**
- * Java Helper for [getExtension]
- */
-public fun <E : ItemExtension> getExtension(item: Item, extensionClass: Class<E>): E? =
-    ItemExtension.getExtension(extensionClass, item)
 
 
 /**
@@ -82,7 +77,10 @@ public fun interface DisablesCape : ItemExtension {
     public fun disablesCape(itemStack: ItemStack, player: AbstractClientPlayer): Boolean
 }
 
-@OptIn(CynosureInternal::class)
-public var Item.burnTime: Int
-    get() = CynosureHooks.getItemBurnTime(defaultInstance)
-    set(value) { CynosureHooks.registerBurnTime(this, value) }
+/**
+ * Allows adding custom lines to the item tooltip
+ */
+public fun interface CustomTooltip : ItemExtension {
+    public fun MutableList<Component>.modifyTooltip(stack: ItemStack, player: Player, flags: TooltipFlag)
+}
+

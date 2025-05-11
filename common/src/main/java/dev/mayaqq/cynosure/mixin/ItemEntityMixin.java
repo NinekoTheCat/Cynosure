@@ -1,7 +1,7 @@
 package dev.mayaqq.cynosure.mixin;
 
-import dev.mayaqq.cynosure.items.ItemEntityTickListener;
-import dev.mayaqq.cynosure.items.ItemExtension;
+import dev.mayaqq.cynosure.items.extensions.ItemEntityTickListener;
+import dev.mayaqq.cynosure.items.extensions.ItemExtension;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;

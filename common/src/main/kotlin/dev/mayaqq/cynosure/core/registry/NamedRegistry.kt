@@ -1,6 +1,7 @@
 package dev.mayaqq.cynosure.core.registry
 
 import com.google.common.collect.HashBiMap
+import com.google.common.collect.ImmutableMap
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import dev.mayaqq.cynosure.utils.serialization.defaults.ResourceLocationSerializer
@@ -13,22 +14,24 @@ import net.minecraft.resources.ResourceLocation
 import java.util.*
 import java.util.function.Supplier
 
-public class NamedRegistry<T : Any>(private val defaultValue: (() -> T)? = null) {
-    private val backingMap: HashBiMap<ResourceLocation, T> = HashBiMap.create()
+public open class NamedRegistry<T : Any>(private val defaultValue: (() -> T)? = null) {
+    protected val idMap: HashBiMap<ResourceLocation, T> = HashBiMap.create()
     private var codec: Codec<T>? = null
     private var serializer: KSerializer<T>? = null
 
-    public fun register(key: ResourceLocation, value: T): T {
+    public open fun register(key: ResourceLocation, value: T): T {
         Objects.requireNonNull(key, "Key cannot be null")
         Objects.requireNonNull(value, "Value cannot be null")
-        check(!backingMap.containsKey(key)) { "Key already present: $key" }
-        backingMap[key] = value
+        check(!idMap.containsKey(key)) { "Key already present: $key" }
+        idMap[key] = value
         return value
     }
 
-    public operator fun get(key: ResourceLocation): T? = backingMap[key] ?: defaultValue?.invoke()
+    public open operator fun get(key: ResourceLocation): T? = idMap[key] ?: defaultValue?.invoke()
 
-    public fun getKey(value: T): ResourceLocation? = backingMap.inverse()[value]
+    public open fun getKey(value: T): ResourceLocation? = idMap.inverse()[value]
+
+    public fun getAll(): Map<ResourceLocation, T> = ImmutableMap.copyOf(idMap)
 
     public fun codec(): Codec<T> = codec ?: ResourceLocation.CODEC.flatXmap(
         fun(rl) = failIfNull(get(rl)) { "Entry not present: $rl" },
