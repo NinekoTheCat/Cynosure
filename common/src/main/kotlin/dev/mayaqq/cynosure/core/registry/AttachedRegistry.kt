@@ -1,4 +1,4 @@
 package dev.mayaqq.cynosure.core.registry
 
-public class AttachedRegistry<T : Any> {
+public class AttachedRegistry<K : Any, T> {
 }

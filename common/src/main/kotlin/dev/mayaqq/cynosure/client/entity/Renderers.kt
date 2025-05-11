@@ -1,6 +1,6 @@
 package dev.mayaqq.cynosure.client.entity
 
-import dev.mayaqq.cynosure.utils.AccessWidenerReplacement
+import dev.mayaqq.cynosure.core.AccessWidenerReplacement
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
 import net.minecraft.client.renderer.entity.EntityRendererProvider

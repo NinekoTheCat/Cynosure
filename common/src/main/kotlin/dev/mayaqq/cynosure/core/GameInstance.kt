@@ -18,6 +18,3 @@ public interface GameInstance {
     }
 }
 
-public enum class Environment {
-    CLIENT, SERVER;
-}

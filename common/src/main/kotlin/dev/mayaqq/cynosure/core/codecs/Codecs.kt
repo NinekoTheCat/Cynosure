@@ -5,6 +5,10 @@ import com.mojang.serialization.*
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.teamresourceful.bytecodecs.base.ByteCodec
 import com.teamresourceful.bytecodecs.base.ObjectEntryByteCodec
+import dev.mayaqq.cynosure.core.Either
+import dev.mayaqq.cynosure.utils.dfu.DFUPair
+import dev.mayaqq.cynosure.utils.dfu.toDFU
+import dev.mayaqq.cynosure.utils.dfu.toKt
 import dev.mayaqq.cynosure.utils.result.toDataResult
 import net.minecraft.core.Registry
 import kotlin.reflect.KProperty1
@@ -20,6 +24,14 @@ public object Codecs {
 
     @JvmStatic
     public fun <T> lazy(initializer: () -> Codec<T>): LazyCodec<T> = LazyCodec(initializer)
+
+    @JvmStatic
+    public fun <L, R> either(leftCodec: Codec<L>, rightCodec: Codec<R>): Codec<Either<L, R>> =
+        Either.codec(leftCodec, rightCodec)
+
+    @JvmStatic
+    public fun <A, B> pair(leftCodec: Codec<A>, righCodec: Codec<B>): Codec<Pair<A, B>> =
+        Codec.pair(leftCodec, righCodec).xmap(DFUPair<A, B>::toKt, Pair<A, B>::toDFU)
 
     @JvmStatic
     public fun <A> json(encoder: (A) -> JsonElement, decoder: (JsonElement) -> A): Codec<A> =

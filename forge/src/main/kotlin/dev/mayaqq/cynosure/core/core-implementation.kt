@@ -1,10 +1,6 @@
 @file:Suppress("ACTUAL_WITHOUT_EXPECT")
-package dev.mayaqq.cynosure.utils
+package dev.mayaqq.cynosure.core
 
-import dev.mayaqq.cynosure.core.Environment
-import dev.mayaqq.cynosure.core.GameInstance
-import dev.mayaqq.cynosure.core.Loader
-import dev.mayaqq.cynosure.core.PlatformHooks
 import dev.mayaqq.cynosure.core.mod.Mod
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.TickTask

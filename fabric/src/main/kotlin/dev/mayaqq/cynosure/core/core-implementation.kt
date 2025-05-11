@@ -1,9 +1,5 @@
-package dev.mayaqq.cynosure.utils
+package dev.mayaqq.cynosure.core
 
-import dev.mayaqq.cynosure.core.Environment
-import dev.mayaqq.cynosure.core.GameInstance
-import dev.mayaqq.cynosure.core.Loader
-import dev.mayaqq.cynosure.core.PlatformHooks
 import dev.mayaqq.cynosure.core.mod.Mod
 import net.fabricmc.api.EnvType
 import net.fabricmc.loader.api.FabricLoader
@@ -56,11 +52,11 @@ internal object GameInstanceImpl : GameInstance {
         private set
 
     fun onLoadServer(server: MinecraftServer) {
-        this.currentServer = server
+        currentServer = server
     }
 
     fun onUnloadServer() {
-        this.currentServer = null
+        currentServer = null
     }
 
     override fun getEventLoop(side: Environment): BlockableEventLoop<in TickTask> {

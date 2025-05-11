@@ -5,6 +5,8 @@ package dev.mayaqq.cynosure.core
 import com.mojang.serialization.Codec
 import dev.mayaqq.cynosure.core.Either.Left
 import dev.mayaqq.cynosure.core.Either.Right
+import dev.mayaqq.cynosure.utils.dfu.toCynosure
+import dev.mayaqq.cynosure.utils.dfu.toDFU
 
 public sealed interface Either<out L, out R> {
 
@@ -78,9 +80,3 @@ public inline fun <L, R> Either<L, R>.foldToRight(transform: (L) -> R): R = when
     is Left -> transform(left)
     is Right -> right
 }
-
-public fun <L, R> com.mojang.datafixers.util.Either<L, R>.toCynosure(): Either<L, R> =
-    map({ Left(it) }, { Right(it) })
-
-public fun <L, R> Either<L, R>.toDFU(): com.mojang.datafixers.util.Either<L, R> =
-    fold({ com.mojang.datafixers.util.Either.left(it) }, { com.mojang.datafixers.util.Either.right(it) })

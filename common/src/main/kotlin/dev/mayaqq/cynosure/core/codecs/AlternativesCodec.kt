@@ -30,6 +30,6 @@ public class AlternativesCodec<A>(
             if (r.error().isPresent) errors.accept(input) else break
         }
 
-        return result.map { Pair.of(it, ops.createList(errors.build())) }
+        return result.map { Pair.of(it, input) }
     }
 }
