@@ -1,10 +1,10 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package dev.mayaqq.cynosure.core
+package dev.mayaqq.cynosure.utils
 
 import com.mojang.serialization.Codec
-import dev.mayaqq.cynosure.core.Either.Left
-import dev.mayaqq.cynosure.core.Either.Right
+import dev.mayaqq.cynosure.utils.Either.Left
+import dev.mayaqq.cynosure.utils.Either.Right
 import dev.mayaqq.cynosure.utils.dfu.toCynosure
 import dev.mayaqq.cynosure.utils.dfu.toDFU
 

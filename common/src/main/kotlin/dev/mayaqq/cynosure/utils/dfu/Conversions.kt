@@ -1,9 +1,9 @@
 package dev.mayaqq.cynosure.utils.dfu
 
-import dev.mayaqq.cynosure.core.Either
-import dev.mayaqq.cynosure.core.Either.Left
-import dev.mayaqq.cynosure.core.Either.Right
-import dev.mayaqq.cynosure.core.fold
+import dev.mayaqq.cynosure.utils.Either
+import dev.mayaqq.cynosure.utils.Either.Left
+import dev.mayaqq.cynosure.utils.Either.Right
+import dev.mayaqq.cynosure.utils.fold
 
 public typealias DFUPair<F, S> = com.mojang.datafixers.util.Pair<F ,S>
 

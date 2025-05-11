@@ -1,4 +1,4 @@
-package dev.mayaqq.cynosure.utils
+package dev.mayaqq.cynosure.client.utils
 
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.GuiGraphics

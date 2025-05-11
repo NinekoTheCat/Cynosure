@@ -5,7 +5,7 @@ import com.mojang.serialization.*
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.teamresourceful.bytecodecs.base.ByteCodec
 import com.teamresourceful.bytecodecs.base.ObjectEntryByteCodec
-import dev.mayaqq.cynosure.core.Either
+import dev.mayaqq.cynosure.utils.Either
 import dev.mayaqq.cynosure.utils.dfu.DFUPair
 import dev.mayaqq.cynosure.utils.dfu.toDFU
 import dev.mayaqq.cynosure.utils.dfu.toKt

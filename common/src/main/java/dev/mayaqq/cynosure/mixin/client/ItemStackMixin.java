@@ -1,4 +1,4 @@
-package dev.mayaqq.cynosure.mixin;
+package dev.mayaqq.cynosure.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.mayaqq.cynosure.client.events.tooltip.ModifyTooltipComponentsEvent;
@@ -26,13 +26,11 @@ public abstract class ItemStackMixin {
 
     @Inject(
         method = "getTooltipLines",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/item/TooltipFlag;isAdvanced()Z"
-        )
+        at = @At("RETURN")
     )
-    private void addCustomLines(Player player, TooltipFlag flag, CallbackInfoReturnable<List<Component>> cir, @Local List<Component> list) {
+    private void addCustomLines(Player player, TooltipFlag flag, CallbackInfoReturnable<List<Component>> cir) {
         CustomTooltip extension = ItemExtension.Registry.getExtension(CustomTooltip.class, this.getItem());
+        List<Component> list = cir.getReturnValue();
         if (extension != null) {
             extension.modifyTooltip(list, (ItemStack) (Object) this, player, flag);
         }

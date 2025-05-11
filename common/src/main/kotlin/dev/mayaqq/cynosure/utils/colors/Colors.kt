@@ -12,8 +12,12 @@ internal val colorByName: MutableMap<String, Color> = LinkedHashMap(148)
 @JvmField
 internal val nameByColor: MutableMap<Color, String> = HashMap(148)
 
-@JvmSynthetic
-private fun namedColor(name: String, color: UInt): Color = Color(color).also {
+private fun namedColor(name: String, color: UInt): Color = Color(color or 0xff000000u).also {
+    colorByName[name] = it
+    if (!nameByColor.contains(it)) nameByColor[it] = name
+}
+
+private fun namedColorWithAlpha(name: String, color: UInt): Color = Color(color).also {
     colorByName[name] = it
     if (!nameByColor.contains(it)) nameByColor[it] = name
 }
@@ -316,3 +320,4 @@ public val Yellow: Color = namedColor("yellow", 0xffff00u)
 
 public val YellowGreen: Color = namedColor("yellowgreen", 0x9acd32u)
 
+public val Transparent: Color = namedColorWithAlpha("transparent", 0x00000000u)
