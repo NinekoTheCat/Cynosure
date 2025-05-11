@@ -1,6 +1,6 @@
 package dev.mayaqq.cynosure.events.api
 
-import dev.mayaqq.cynosure.utils.Environment
+import dev.mayaqq.cynosure.core.Environment
 import kotlin.reflect.KClass
 
 /**

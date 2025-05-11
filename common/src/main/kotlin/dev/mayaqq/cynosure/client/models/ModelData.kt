@@ -1,12 +1,12 @@
 package dev.mayaqq.cynosure.client.models
 
-import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
 import com.mojang.serialization.Keyable
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import dev.mayaqq.cynosure.client.models.baked.ModelRenderType
-import dev.mayaqq.cynosure.utils.codecs.Codecs
-import dev.mayaqq.cynosure.utils.codecs.fieldOf
+import dev.mayaqq.cynosure.utils.Either
+import dev.mayaqq.cynosure.core.codecs.Codecs
+import dev.mayaqq.cynosure.core.codecs.fieldOf
 import net.minecraft.core.Direction
 import net.minecraft.util.ExtraCodecs
 import org.joml.Vector3f
@@ -109,12 +109,12 @@ public data class ModelElementGroup(
             Codec.STRING fieldOf ModelElementGroup::name,
             ModelRenderType.CODEC.optionalFieldOf("renderType", null).forGetter(ModelElementGroup::renderType),
             ExtraCodecs.VECTOR3F fieldOf ModelElementGroup::origin,
-            Codec.either(Codec.INT, this).listOf().fieldOf("elements").forGetter(ModelElementGroup::indicesAndSubgroubs)
+            Either.codec(Codec.INT, this).listOf().fieldOf("elements").forGetter(ModelElementGroup::indicesAndSubgroubs)
         ).apply(it, ::groupFromEitherList) } }
 
         private fun groupFromEitherList(name: String, renderType: ModelRenderType?, origin: Vector3f, data: List<Either<Int, ModelElementGroup>>): ModelElementGroup {
-            val indices = data.mapNotNull { it.left().orElse(null) }
-            val subgroups = data.map { it.right().orElse(null) }
+            val indices = data.mapNotNull { it.left }
+            val subgroups = data.mapNotNull { it.right }
             return ModelElementGroup(name, renderType, origin, indices, subgroups)
         }
     }
@@ -122,7 +122,7 @@ public data class ModelElementGroup(
 }
 
 private val ModelElementGroup.indicesAndSubgroubs: List<Either<Int, ModelElementGroup>>
-    get() = indices.map { Either.left<Int, ModelElementGroup>(it) } + subgroups.map { Either.right(it) }
+    get() = indices.map { Either.Left(it) } + subgroups.map { Either.Right(it) }
 
 public data class ModelData(
     val renderType: ModelRenderType = ModelRenderType.CUTOUT,

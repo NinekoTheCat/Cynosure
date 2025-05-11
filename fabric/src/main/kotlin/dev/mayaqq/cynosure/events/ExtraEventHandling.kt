@@ -4,9 +4,9 @@ package dev.mayaqq.cynosure.events
 import dev.mayaqq.cynosure.events.api.post
 import dev.mayaqq.cynosure.events.entity.EntityCreatedEvent
 import dev.mayaqq.cynosure.events.entity.MountEvent
-import dev.mayaqq.cynosure.items.CustomEntityItem
-import dev.mayaqq.cynosure.items.getExtension
-import dev.mayaqq.cynosure.utils.GameInstanceImpl
+import dev.mayaqq.cynosure.items.extensions.CustomEntityItem
+import dev.mayaqq.cynosure.items.extensions.getExtension
+import dev.mayaqq.cynosure.core.GameInstanceImpl
 import dev.mayaqq.cynosure.utils.side
 import net.minecraft.server.TickTask
 import net.minecraft.world.entity.Entity

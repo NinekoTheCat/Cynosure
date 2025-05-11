@@ -31,7 +31,3 @@ public infix fun Long.atLeast(min: Long): Long = coerceAtLeast(min)
 public infix fun Float.atLeast(min: Float): Float = coerceAtLeast(min)
 
 public infix fun Double.atLeast(min: Double): Double = coerceAtLeast(min)
-
-public fun uwu() {
-    val c = Color.parse("white")
-}

@@ -2,8 +2,8 @@ package dev.mayaqq.cynosure.fabric.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.mayaqq.cynosure.items.CustomFurnaceFuel;
-import dev.mayaqq.cynosure.items.ItemExtension;
+import dev.mayaqq.cynosure.items.extensions.CustomFurnaceFuel;
+import dev.mayaqq.cynosure.items.extensions.ItemExtension;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;

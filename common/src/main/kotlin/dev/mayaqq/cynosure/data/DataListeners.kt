@@ -3,8 +3,8 @@ package dev.mayaqq.cynosure.data
 import dev.mayaqq.cynosure.CynosureInternal
 import dev.mayaqq.cynosure.client.internal.CynosureClientHooks
 import dev.mayaqq.cynosure.internal.CynosureHooks
-import dev.mayaqq.cynosure.utils.Environment
-import dev.mayaqq.cynosure.utils.PlatformHooks
+import dev.mayaqq.cynosure.core.Environment
+import dev.mayaqq.cynosure.core.PlatformHooks
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.PreparableReloadListener
 

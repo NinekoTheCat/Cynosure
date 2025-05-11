@@ -2,6 +2,7 @@ package dev.mayaqq.cynosure.utils
 
 import com.google.common.collect.MapMaker
 import com.google.common.collect.Table
+import dev.mayaqq.cynosure.core.Environment
 import net.minecraft.world.level.Level
 import java.util.*
 import kotlin.contracts.ExperimentalContracts
@@ -27,9 +28,9 @@ public val Level.side: Environment
 @JvmName("constant")
 public fun <V> constant(constantValue: V): ConstantProperty<V> = ConstantProperty(constantValue)
 
-public fun <I : Any, V> mapBacked(default: V): ReadWriteProperty<I, V> = MapBackedProperty.Defaulted(default)
+public fun <I : Any, V> mapBacked(default: V): MapBackedProperty<I, V> = MapBackedProperty.Defaulted(default)
 
-public fun <I : Any, V> mapBacked(initializer: (I) -> V): ReadWriteProperty<I, V> = MapBackedProperty.Intialized(initializer)
+public fun <I : Any, V> mapBacked(initializer: (I) -> V): MapBackedProperty<I, V> = MapBackedProperty.Intialized(initializer)
 
 public operator fun <T> ThreadLocal<T>.getValue(thisRef: Any?, property: KProperty<*>): T = get()
 
@@ -52,9 +53,9 @@ internal fun String.camelToSnakeCase(): String {
 }
 
 
-internal sealed class MapBackedProperty<I : Any, V> : ReadWriteProperty<I, V> {
+public sealed class MapBackedProperty<I : Any, V> : ReadWriteProperty<I, V> {
 
-    abstract fun getInitial(thisRef: I): V
+    protected abstract fun getInitial(thisRef: I): V
 
     protected val map: MutableMap<I, V> = MapMaker().weakKeys().makeMap()
 
@@ -86,3 +87,5 @@ public operator fun <R, C, V> Table<R, C, V>.get(row: R, column: C): V? = get(ro
 public operator fun <R, C, V> Table<R, C, V>.set(row: R, column: C, value: V) {
     put(row, column, value)
 }
+
+public fun <A, B> Pair<A, B>.swap(): Pair<B, A> = second to first

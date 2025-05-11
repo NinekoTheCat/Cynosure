@@ -7,8 +7,8 @@ import dev.mayaqq.cynosure.events.internal.CynosureEventLogger
 import dev.mayaqq.cynosure.events.internal.subscribeASMMethods
 import dev.mayaqq.cynosure.internal.boolean
 import dev.mayaqq.cynosure.internal.getCynosureValue
-import dev.mayaqq.cynosure.utils.Environment
-import dev.mayaqq.cynosure.utils.PlatformHooks
+import dev.mayaqq.cynosure.core.Environment
+import dev.mayaqq.cynosure.core.PlatformHooks
 import dev.mayaqq.cynosure.utils.asm.descriptorToClassName
 import dev.mayaqq.cynosure.utils.asm.mappedValues
 import kotlinx.coroutines.Dispatchers

@@ -1,5 +1,6 @@
 package dev.mayaqq.cynosure.utils.colors
 
+import dev.mayaqq.cynosure.Cynosure
 import kotlinx.coroutines.*
 import java.lang.ref.Cleaner
 import java.lang.ref.Cleaner.Cleanable
@@ -26,7 +27,11 @@ public fun Rainbow(updateDelay: Long = 40L): ChangingColor = ChangingColor(Green
 
 @OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
 private val ColorCoroutineScope: CoroutineScope = CoroutineScope(
-    newSingleThreadContext("Color") + SupervisorJob()
+    newSingleThreadContext("Color")
+            + SupervisorJob()
+            + CoroutineExceptionHandler { ctx, err ->
+                Cynosure.error("Color update job {} failed", ctx.job, err)
+            }
 )
 
 public class ChangingColor(

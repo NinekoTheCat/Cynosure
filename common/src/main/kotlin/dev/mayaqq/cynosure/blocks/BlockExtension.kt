@@ -1,7 +1,7 @@
 package dev.mayaqq.cynosure.blocks
 
-import dev.mayaqq.cynosure.extensions.Extension
-import dev.mayaqq.cynosure.extensions.ExtensionRegistry
+import dev.mayaqq.cynosure.core.extensions.Extension
+import dev.mayaqq.cynosure.core.extensions.ExtensionRegistry
 import net.minecraft.world.level.block.Block
 
 public interface BlockExtension : Extension<Block> {
