@@ -118,12 +118,12 @@ public object ByteCodecs {
      * [ObjectEntryByteCodec] version of [ByteCodec.unit]
      */
     @JvmStatic
-    public fun <O, T> constant(value: () -> T): ObjectEntryByteCodec<O, T> =
-        ByteCodec.unit(value) fieldOf { _ -> value() }
+    public fun <O, T> constantFieldOf(value: () -> T): ObjectEntryByteCodec<O, T> =
+        ByteCodec.unit(value).fieldOf { _ -> value() }
 
     @JvmStatic
-    public fun <O, T> constant(value: T): ObjectEntryByteCodec<O, T> =
-        ByteCodec.unit(value) fieldOf { _ -> value }
+    public fun <O, T> constantFieldOf(value: T): ObjectEntryByteCodec<O, T> =
+        ByteCodec.unit(value).fieldOf { _ -> value }
 }
 
 public object CompoundTagByteCodec : ByteCodec<Optional<CompoundTag>> {
