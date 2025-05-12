@@ -2,8 +2,8 @@ package dev.mayaqq.cynosure.transactions.internal
 
 import dev.mayaqq.cynosure.transactions.*
 import dev.mayaqq.cynosure.utils.getValue
-import dev.mayaqq.cynosure.utils.result.failure
 import dev.mayaqq.cynosure.utils.result.UNIT
+import dev.mayaqq.cynosure.utils.result.failure
 
 internal val LocalManager: TransactionManager by ThreadLocal.withInitial(::TransactionManager)
 
@@ -32,33 +32,46 @@ internal class TransactionManager {
 
     fun validateThread() {
         val current = Thread.currentThread()
-        require(current == thread) { "Attempted to access transation from thread ${thread.name} on ${current.name}" }
+        check(current == thread) { "Attempted to access transation from thread ${thread.name} on ${current.name}" }
     }
 
     @DelicateTransactionApi
-    fun getCurrent(): Transaction? = currentTransaction?.takeIf { it.lifecycle == Transaction.Lifecycle.OPEN }
+    fun getCurrent(): Transaction? {
+        validateThread()
+        return currentTransaction?.takeIf { it.lifecycle == Transaction.Lifecycle.OPEN }
+    }
 
     internal inner class LinkedTransaction(
         nestingDepth: Int,
         private val parentTransaction: LinkedTransaction?
     ) : Transaction(nestingDepth) {
 
+        private lateinit var listeners: MutableList<InnerCloseListener>
+
         override var lifecycle: Lifecycle = Lifecycle.CLOSED
-        private val listeners: MutableList<InnerCloseListener> = mutableListOf()
+        var result: TransactionResult = TransactionResult.ABORTED
 
         override fun close(result: TransactionResult) {
             validateCurrentTransaction()
             validateOpen()
 
             lifecycle = Lifecycle.CLOSING
+            this.result = result
 
             var closeResult: Result<Unit> = Result.UNIT
-            for (index in listeners.size downTo 0) {
-                listeners[index].runCatching { (this@LinkedTransaction as TransactionContext).onClose(result) }
-                    .onFailure { (closeResult.exceptionOrNull() ?: RuntimeException("Transaction error").also { closeResult = it.failure() }).addSuppressed(it) }
-            }
 
-            listeners.clear()
+            if (::listeners.isInitialized) {
+                for (index in listeners.size downTo 0) {
+                    listeners[index].runCatching { (this@LinkedTransaction as TransactionContext).onClose(result) }
+                        .onFailure {
+                            (closeResult.exceptionOrNull() ?: RuntimeException("Transaction error")
+                                .also { closeResult = it.failure() })
+                                .addSuppressed(it)
+                        }
+                }
+
+                listeners.clear()
+            }
 
             if (this === outerTransaction) {
                 lifecycle = Lifecycle.OUTER_CLOSING
@@ -79,6 +92,7 @@ internal class TransactionManager {
         override fun addCloseListener(listener: InnerCloseListener) {
             validateThread()
             validateOpen()
+            if (!::listeners.isInitialized) listeners = mutableListOf()
             listeners.add(listener)
         }
 

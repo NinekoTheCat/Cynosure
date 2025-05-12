@@ -18,10 +18,3 @@ public interface Storage<R : Resource> {
     public fun extract(resource: R, amount: Long): Long
 }
 
-public fun <R : Resource> Storage<R>.insert(context: TransactionContext, resource: R, amount: Long) {
-    return context.run { insert(resource, amount) }
-}
-
-public fun <R : Resource> Storage<R>.extract(context: TransactionContext, resource: R, amount: Long) {
-    return context.run { extract(resource, amount) }
-}

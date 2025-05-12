@@ -1,8 +1,11 @@
 package dev.mayaqq.cynosure.transactions.snapshot
 
-import dev.mayaqq.cynosure.transactions.*
+import dev.mayaqq.cynosure.transactions.InnerCloseListener
+import dev.mayaqq.cynosure.transactions.OuterCloseListener
+import dev.mayaqq.cynosure.transactions.TransactionContext
+import dev.mayaqq.cynosure.transactions.TransactionResult
 
-public abstract class SnapshotParticipant<T : Any> : InnerCloseListener, OuterCloseListener {
+public abstract class SnapshotHandler<T : Any> : InnerCloseListener, OuterCloseListener {
     private val snapshots: MutableList<T?> = mutableListOf()
 
     protected abstract fun createSnapshot(): T
@@ -20,7 +23,7 @@ public abstract class SnapshotParticipant<T : Any> : InnerCloseListener, OuterCl
                 snapshots.addAll(nulls as Array<T?>)
             }
             snapshots[depth] = createSnapshot()
-            addOuterCloseListener(this@SnapshotParticipant)
+            addOuterCloseListener(this@SnapshotHandler)
         }
     }
 
@@ -34,14 +37,14 @@ public abstract class SnapshotParticipant<T : Any> : InnerCloseListener, OuterCl
             depth > 0 -> {
                 if (snapshots.getOrNull(depth -1) == null) {
                     snapshots[depth - 1] = snapshot
-                    this[depth - 1]?.addCloseListener(this@SnapshotParticipant)
+                    this[depth - 1]?.addCloseListener(this@SnapshotHandler)
                 } else {
                     discardSnapshot(snapshot)
                 }
             }
             else -> {
                 discardSnapshot(snapshot)
-                addOuterCloseListener(this@SnapshotParticipant)
+                addOuterCloseListener(this@SnapshotHandler)
             }
         }
     }

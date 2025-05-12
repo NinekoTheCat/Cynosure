@@ -2,9 +2,9 @@ package dev.mayaqq.cynosure.storage
 
 import dev.mayaqq.cynosure.storage.resource.Resource
 import dev.mayaqq.cynosure.storage.resource.ResourceStack
-import dev.mayaqq.cynosure.transactions.snapshot.SnapshotParticipant
+import dev.mayaqq.cynosure.transactions.snapshot.SnapshotHandler
 
-public abstract class StorageSlot<R : Resource> : SnapshotParticipant<ResourceStack<R>>(), Storage<R> {
+public abstract class StorageSlot<R : Resource> : SnapshotHandler<ResourceStack<R>>(), Storage<R> {
 
     public abstract var contents: ResourceStack<R>
         protected set
