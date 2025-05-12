@@ -13,5 +13,5 @@ internal object TransactionManagerAccess {
     fun openOuter() = LocalManager.openOuter()
 
     @JvmStatic
-    fun openInner(current: TransactionContext): Transaction = (current as TransactionManager.TransactionImpl).openInner()
+    fun openInner(current: TransactionContext): Transaction = (current as TransactionManager.LinkedTransaction).openNested()
 }

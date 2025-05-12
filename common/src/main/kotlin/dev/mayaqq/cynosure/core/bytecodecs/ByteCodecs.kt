@@ -121,6 +121,9 @@ public object ByteCodecs {
     public fun <O, T> constantFieldOf(value: () -> T): ObjectEntryByteCodec<O, T> =
         ByteCodec.unit(value).fieldOf { _ -> value() }
 
+    /**
+     * [ObjectEntryByteCodec] version of [ByteCodec.unit] part 2
+     */
     @JvmStatic
     public fun <O, T> constantFieldOf(value: T): ObjectEntryByteCodec<O, T> =
         ByteCodec.unit(value).fieldOf { _ -> value }

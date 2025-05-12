@@ -1,12 +1,8 @@
 package dev.mayaqq.cynosure.transactions.snapshot
 
-import dev.mayaqq.cynosure.transactions.CloseListener
-import dev.mayaqq.cynosure.transactions.OuterCloseListener
-import dev.mayaqq.cynosure.transactions.TransactionContext
-import dev.mayaqq.cynosure.transactions.TransactionResult
-import net.minecraft.world.item.ItemStack
+import dev.mayaqq.cynosure.transactions.*
 
-public abstract class SnapshotParticipant<T : Any> : CloseListener, OuterCloseListener {
+public abstract class SnapshotParticipant<T : Any> : InnerCloseListener, OuterCloseListener {
     private val snapshots: MutableList<T?> = mutableListOf()
 
     protected abstract fun createSnapshot(): T
@@ -18,30 +14,29 @@ public abstract class SnapshotParticipant<T : Any> : CloseListener, OuterCloseLi
     protected open fun onFinalCommit() {}
 
     protected fun TransactionContext.updateSnapshots() {
-        if (snapshots.getOrNull(nestingDepth) == null) {
-            if (snapshots.size < nestingDepth) {
-                val nulls = arrayOfNulls<Any>(nestingDepth - snapshots.size)
+        if (snapshots.getOrNull(depth) == null) {
+            if (snapshots.size < depth) {
+                val nulls = arrayOfNulls<Any>(depth - snapshots.size)
                 snapshots.addAll(nulls as Array<T?>)
             }
-            snapshots[nestingDepth] = createSnapshot()
+            snapshots[depth] = createSnapshot()
             addOuterCloseListener(this@SnapshotParticipant)
         }
     }
 
     final override fun TransactionContext.onClose(result: TransactionResult) {
-        val snapshot = snapshots.set(nestingDepth, null) ?: return
+        val snapshot = snapshots.set(depth, null) ?: return
         when {
             result == TransactionResult.ABORTED -> {
                 readSnapshot(snapshot)
                 discardSnapshot(snapshot)
             }
-            nestingDepth > 0 -> {
-                if (snapshots.getOrNull(nestingDepth -1) == null) {
-                    snapshots[nestingDepth - 1] = snapshot
-                    this[nestingDepth - 1]?.addCloseListener(this@SnapshotParticipant)
+            depth > 0 -> {
+                if (snapshots.getOrNull(depth -1) == null) {
+                    snapshots[depth - 1] = snapshot
+                    this[depth - 1]?.addCloseListener(this@SnapshotParticipant)
                 } else {
                     discardSnapshot(snapshot)
-                    ItemStack.CODEC
                 }
             }
             else -> {
