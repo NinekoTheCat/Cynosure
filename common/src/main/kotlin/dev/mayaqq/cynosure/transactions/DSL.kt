@@ -1,11 +1,9 @@
 @file:JvmName("DSL")
-@file:OptIn(ExperimentalContracts::class)
 package dev.mayaqq.cynosure.transactions
 
 import dev.mayaqq.cynosure.transactions.internal.LocalManager
 import dev.mayaqq.cynosure.transactions.internal.TransactionManagerAccess
 import dev.mayaqq.cynosure.transactions.internal.TransactionManagerAccess.result
-import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
