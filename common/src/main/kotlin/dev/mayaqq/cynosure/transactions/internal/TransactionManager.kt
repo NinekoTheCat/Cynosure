@@ -50,6 +50,7 @@ internal class TransactionManager {
 
         override var lifecycle: Lifecycle = Lifecycle.CLOSED
         var result: TransactionResult = TransactionResult.ABORTED
+            private set
 
         override fun close(result: TransactionResult) {
             validateCurrentTransaction()
