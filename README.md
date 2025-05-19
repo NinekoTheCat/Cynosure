@@ -1,5 +1,6 @@
 ![Cynosure](https://cdn.modrinth.com/data/4JVfdODB/images/23b3ae211553f831b2564d63f89fe0ab0589f0ee.png)
 ![Overview](https://cdn.modrinth.com/data/4JVfdODB/images/eb04d387a88596c9cc1f489ca16257e28784c5fd.png)
+> *“Cynosure. Cyberspace equivalent of a nuke, Militech's answer to Arasaka's Soulkiller.”* — Solomon Reed
 
 Cynosure is a multiloader, mulitpurpose __kotlin-only*__ library mod featuring a multitude of useful tools for mod development and an incredibly amount of platform abstractions. Mod is build from the ground up on kotlin utilizing
 it's many features and technologies.
