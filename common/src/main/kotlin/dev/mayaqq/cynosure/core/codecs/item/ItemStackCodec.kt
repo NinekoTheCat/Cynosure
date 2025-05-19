@@ -2,6 +2,8 @@ package dev.mayaqq.cynosure.core.codecs.item
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
+import com.mojang.serialization.Decoder
+import com.mojang.serialization.DynamicOps
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.teamresourceful.bytecodecs.base.ByteCodec
 import dev.mayaqq.cynosure.core.bytecodecs.item.ItemStackByteCodec
@@ -13,26 +15,15 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import java.util.*
-import java.util.function.Function
 
-public object ItemStackCodec : Codec<ItemStack> by Codecs.lazy({ Codecs.alternatives(
-    ItemStackCodec.EMPTY_STACK,
-    ItemStackCodec.SINGLE_ITEM,
-    ItemStackCodec.MULTIPLE_ITEM
-) }) {
+public object ItemStackCodec : Codec<ItemStack>, Decoder<ItemStack> by Codecs.lazy({
+    Codecs.alternatives(ItemStackCodec.MULTIPLE_ITEM, ItemStackCodec.SINGLE_ITEM, ItemStackCodec.EMPTY_STACK)
+}) {
 
     public val EMPTY_STACK: Codec<ItemStack> = Codec.unit(ItemStack.EMPTY)
-        .flatComapMap(
-            Function.identity(),
-            fun(stack) = if (stack != ItemStack.EMPTY) DataResult.error { "Stack is not empty" } else DataResult.success(stack)
-        )
 
     public val SINGLE_ITEM: Codec<ItemStack> = BuiltInRegistries.ITEM.byNameCodec()
-        .flatComapMap(
-            Item::getDefaultInstance,
-            fun(stack) = if (stack.count > 1 || stack.hasTag()) DataResult.error { "Stack contains more than one item or has a tag" }
-                else DataResult.success(stack.item)
-        )
+        .xmap(Item::getDefaultInstance, ItemStack::getItem)
 
     public val MULTIPLE_ITEM: Codec<ItemStack> = RecordCodecBuilder.create { it.group(
         BuiltInRegistries.ITEM.byNameCodec() fieldOf "item" forGetter ItemStack::getItem,
@@ -42,5 +33,14 @@ public object ItemStackCodec : Codec<ItemStack> by Codecs.lazy({ Codecs.alternat
 
     public val NETWORK: ByteCodec<ItemStack> = ItemStackByteCodec
 
+    override fun <T : Any> encode(input: ItemStack, ops: DynamicOps<T>, prefix: T): DataResult<T> {
+        val codec = when {
+            input.isEmpty -> EMPTY_STACK
+            !input.hasTag() && input.count == 1 -> SINGLE_ITEM
+            else -> MULTIPLE_ITEM
+        }
+
+        return codec.encode(input, ops, prefix)
+    }
 }
 
