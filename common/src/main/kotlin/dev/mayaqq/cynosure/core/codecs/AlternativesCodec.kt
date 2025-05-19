@@ -13,7 +13,7 @@ public class AlternativesCodec<A>(
     override fun <T : Any> encode(input: A, ops: DynamicOps<T>, prefix: T): DataResult<T> {
         var result = DataResult.error<T> { "No codecs found" }
         for (codec in codecs) {
-            result = result.apply2stable({r1, _ -> r1},  codec.encode(input, ops, prefix))
+            result = result.apply2stable(fun(r1, _) = r1,  codec.encode(input, ops, prefix))
             if (result.result().isPresent) break
         }
         return result

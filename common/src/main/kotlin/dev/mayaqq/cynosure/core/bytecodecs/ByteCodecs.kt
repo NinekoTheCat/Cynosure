@@ -7,6 +7,11 @@ import com.teamresourceful.bytecodecs.utils.ByteBufUtils
 import dev.mayaqq.cynosure.core.bytecodecs.item.ItemStackByteCodec
 import dev.mayaqq.cynosure.core.codecs.IngredientCodec
 import dev.mayaqq.cynosure.core.codecs.fieldOf
+import dev.mayaqq.cynosure.utils.Either
+import dev.mayaqq.cynosure.utils.Either.Left
+import dev.mayaqq.cynosure.utils.Either.Right
+import dev.mayaqq.cynosure.utils.isLeft
+import dev.mayaqq.cynosure.utils.isRight
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufInputStream
 import io.netty.buffer.ByteBufOutputStream
@@ -105,6 +110,13 @@ public object ByteCodecs {
     }
 
     @JvmStatic
+    public fun <L, R> either(leftCodec: ByteCodec<L>, rightCodec: ByteCodec<R>): ByteCodec<Either<L, R>> {
+        val l: ByteCodec<Either<L, R>> = leftCodec.map(::Left, fun(either) = either.left!!)
+        val r: ByteCodec<Either<L, R>> = rightCodec.map(::Right, fun(either) = either.right!!)
+        return ByteCodec.BOOLEAN.dispatch(fun(right) = if (right) r else l, Either<L, R>::isRight)
+    }
+
+    @JvmStatic
     public fun <T> registry(map: IdMap<T>): ByteCodec<T> {
         return IdMapByteCodec(map)
     }
@@ -118,12 +130,15 @@ public object ByteCodecs {
      * [ObjectEntryByteCodec] version of [ByteCodec.unit]
      */
     @JvmStatic
-    public fun <O, T> constant(value: () -> T): ObjectEntryByteCodec<O, T> =
-        ByteCodec.unit(value) fieldOf { _ -> value() }
+    public fun <O, T> constantFieldOf(value: () -> T): ObjectEntryByteCodec<O, T> =
+        ByteCodec.unit(value).fieldOf { _ -> value() }
 
+    /**
+     * [ObjectEntryByteCodec] version of [ByteCodec.unit] part 2
+     */
     @JvmStatic
-    public fun <O, T> constant(value: T): ObjectEntryByteCodec<O, T> =
-        ByteCodec.unit(value) fieldOf { _ -> value }
+    public fun <O, T> constantFieldOf(value: T): ObjectEntryByteCodec<O, T> =
+        ByteCodec.unit(value).fieldOf { _ -> value }
 }
 
 public object CompoundTagByteCodec : ByteCodec<Optional<CompoundTag>> {

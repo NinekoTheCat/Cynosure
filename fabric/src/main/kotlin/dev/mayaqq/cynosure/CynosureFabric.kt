@@ -7,13 +7,13 @@ import dev.mayaqq.cynosure.internal.arrayOrNull
 import dev.mayaqq.cynosure.internal.getCynosureValue
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage
-import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.ModContainer
 import net.fabricmc.loader.api.metadata.CustomValue.CvArray
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import kotlin.jvm.internal.Reflection
+import kotlin.reflect.typeOf
 
 internal object CynosureFabric {
     fun init() {
@@ -29,6 +29,7 @@ internal object CynosureFabric {
     }
 
     fun lateinit() {
+        val a = typeOf<MutableMap<out String, Int>>()
         PostInitEvent.post()
     }
 
