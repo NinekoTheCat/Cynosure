@@ -9,9 +9,9 @@ import com.teamresourceful.bytecodecs.base.ByteCodec
 import dev.mayaqq.cynosure.core.bytecodecs.FriendlyByteCodec
 import net.minecraft.world.item.crafting.Ingredient
 
-public object IngredientCodec : Codec<Ingredient> by Codec.PASSTHROUGH.comapFlatMap(
+public object IngredientCodec : Codec<Ingredient> by Codecs.lazy({Codec.PASSTHROUGH.comapFlatMap(
     IngredientCodec::decodeIngredient, IngredientCodec::encodeIngredient
-) {
+)}) {
     @JvmField
     public val NETWORK: ByteCodec<Ingredient> = FriendlyByteCodec(Ingredient::toNetwork, Ingredient::fromNetwork)
 
@@ -20,7 +20,5 @@ public object IngredientCodec : Codec<Ingredient> by Codec.PASSTHROUGH.comapFlat
         return DataResult.success(Ingredient.fromJson(thing))
     }
 
-    private fun encodeIngredient(ingredient: Ingredient): Dynamic<JsonElement> =
-        Dynamic(JsonOps.INSTANCE, ingredient.toJson())
-
+    private fun encodeIngredient(ingredient: Ingredient): Dynamic<JsonElement> = Dynamic(JsonOps.INSTANCE, ingredient.toJson())
 }
