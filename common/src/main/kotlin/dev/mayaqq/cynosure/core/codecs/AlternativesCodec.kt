@@ -11,12 +11,17 @@ public class AlternativesCodec<A>(
 ) : Codec<A> {
 
     override fun <T : Any> encode(input: A, ops: DynamicOps<T>, prefix: T): DataResult<T> {
-        var result = DataResult.error<T> { "No codecs found" }
+        var result = DataResult.success(Unit)
+        var output: T? = null
         for (codec in codecs) {
-            result = result.apply2stable(fun(r1, _) = r1,  codec.encode(input, ops, prefix))
-            if (result.result().isPresent) break
+            val r = codec.encode(input, ops, prefix)
+            result = result.apply2stable(fun(r1, _) = r1,  r)
+            if (r.result().isPresent) {
+                output = r.result().get()
+                break
+            }
         }
-        return result
+        return if (output != null) result.map { output } else DataResult.error { "No codecs found" }
     }
 
 
