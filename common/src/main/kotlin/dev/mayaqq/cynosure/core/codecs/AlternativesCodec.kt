@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import com.mojang.serialization.DynamicOps
+import dev.mayaqq.cynosure.utils.dfu.DFUPair
 import java.util.stream.Stream
 
 public class AlternativesCodec<A>(
@@ -24,17 +25,20 @@ public class AlternativesCodec<A>(
         return if (output != null) result.map { output } else DataResult.error { "No codecs found" }
     }
 
-
     override fun <T : Any> decode(ops: DynamicOps<T>, input: T): DataResult<Pair<A, T>> {
-        var result = DataResult.error<A> { "No codecs found" }
+        var result = DataResult.success(Unit)
+        var output: A? = null
         val errors: Stream.Builder<T> = Stream.builder()
 
         for (codec in codecs) {
             val r = codec.decode(ops, input)
-            result = result.apply2stable({ r1, _ -> r1 }, r)
-            if (r.error().isPresent) errors.accept(input) else break
+            result = result.apply2stable(fun(r1, _) = r1, r)
+            if (r.error().isPresent) errors.accept(input) else {
+                output = r.result().get().first
+                break
+            }
         }
 
-        return result.map { Pair.of(it, input) }
+        return if (output != null) result.map { DFUPair.of(output, input) } else DataResult.error { "No codecs found" }
     }
 }
