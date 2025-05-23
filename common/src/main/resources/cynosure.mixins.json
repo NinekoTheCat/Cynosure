@@ -18,12 +18,14 @@
     "accessor.TrackedEntityAccessor"
   ],
   "client": [
+    "accessor.SplashRendererAccessor",
     "client.CapeLayerMixin",
     "client.GameRendererMixin",
     "client.ItemStackMixin",
     "client.LevelRendererMixin",
     "client.ParticleEngineMixin",
     "client.RenderBuffersMixin",
+    "client.SplashManagerMixin",
     "client.accessor.LivingEntityRendererAccessor"
   ],
   "injectors": {
