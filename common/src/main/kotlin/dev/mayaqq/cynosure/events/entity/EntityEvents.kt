@@ -33,7 +33,7 @@ public sealed class LivingEntityEvent(public val entity: LivingEntity) : Cancell
     public class Death(entity: LivingEntity, public val source: DamageSource) : LivingEntityEvent(entity)
 }
 
-public class MountEvent(public val entity: Entity, public val mount: Entity?, public val isMounting: Boolean) : Event
+public class MountEvent(public val entity: Entity, public val mount: Entity?, public val isMounting: Boolean) : CancellableEvent()
 
 public class EntityDamageSourceEvent(public val entity: Entity, public val source: DamageSource) : ReturningEvent<DamageSource>()
 

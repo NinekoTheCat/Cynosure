@@ -144,7 +144,9 @@ public fun onEntityJoin(event: EntityJoinLevelEvent) {
 
 @SubscribeEvent
 public fun onEntityMount(event: EntityMountEvent) {
-    MountEvent(event.entityMounting, event.entityBeingMounted, event.isMounting).post()
+    val cynosureEvent = MountEvent(event.entityMounting, event.entityBeingMounted, event.isMounting)
+    cynosureEvent.post()
+    if (cynosureEvent.isCancelled) event.isCanceled = true
 }
 
 @SubscribeEvent
