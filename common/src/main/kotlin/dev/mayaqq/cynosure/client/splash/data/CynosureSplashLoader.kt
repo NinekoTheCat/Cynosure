@@ -13,7 +13,7 @@ import kotlin.random.Random
 
 /**
  * Loader for Splashes Data
- * Create a simple assets/*modid*/splashes.json file and put your strings into a simple JsonArray.
+ * Create a simple assets/modid/splashes/splashes.json file and put your strings into a simple JsonArray with the name "splashes".
  *
  * Additionally, please increment *amount* in CynosureSplashLoader with the amount of strings you added, does not have to be exact
  *
