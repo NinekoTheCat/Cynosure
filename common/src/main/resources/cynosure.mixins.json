@@ -12,6 +12,7 @@
     "LevelChunkMixin",
     "LevelMixin",
     "LivingEntityMixin",
+    "PoiTypesMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "accessor.ChunkMapAccessor",
