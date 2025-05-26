@@ -18,6 +18,6 @@ import net.minecraft.world.item.TooltipFlag
 public class ModifyTooltipComponentsEvent(
     public val stack: ItemStack,
     public val flag: TooltipFlag,
-    public val player: Player,
+    public val player: Player?,
     components: MutableList<Component>
 ) : Event, MutableList<Component> by components
