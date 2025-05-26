@@ -19,7 +19,7 @@ public class DescriptionTooltip(
     private val hiddenLines: MutableList<Component> = mutableListOf()
     private var cachedLanguage: String? = null
 
-    override fun MutableList<Component>.modifyTooltip(stack: ItemStack, player: Player, flags: TooltipFlag) {
+    override fun MutableList<Component>.modifyTooltip(stack: ItemStack, player: Player?, flags: TooltipFlag) {
         if (checkLanguage()) {
             rebuild(stack.item)
         }

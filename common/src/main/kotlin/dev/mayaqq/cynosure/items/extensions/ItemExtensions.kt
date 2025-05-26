@@ -81,6 +81,6 @@ public fun interface DisablesCape : ItemExtension {
  * Allows adding custom lines to the item tooltip
  */
 public fun interface CustomTooltip : ItemExtension {
-    public fun MutableList<Component>.modifyTooltip(stack: ItemStack, player: Player, flags: TooltipFlag)
+    public fun MutableList<Component>.modifyTooltip(stack: ItemStack, player: Player?, flags: TooltipFlag)
 }
 
