@@ -35,12 +35,12 @@ internal fun generateASMEventListener(className: String, methodName: String, met
     val cw = ClassWriter(ClassWriter.COMPUTE_FRAMES)
 
     cw.visit(
-        V17, ACC_PUBLIC,
+        V17, ACC_PUBLIC or ACC_FINAL,
         "dev/mayaqq/cynosure/events/internal/${className.replace('/', '_')}\$EventListener$$methodName$${event.hashCode().toString(16)}",
         null, "java/lang/Object", arrayOf("java/util/function/Consumer")
     )
 
-    val init = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null)
+    val init = cw.visitMethod(ACC_PRIVATE, "<init>", "()V", null, null)
     init.visitCode()
     init.visitVarInsn(ALOAD, 0)
     init.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false)

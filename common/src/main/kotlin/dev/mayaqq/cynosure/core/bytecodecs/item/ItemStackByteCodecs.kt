@@ -3,11 +3,14 @@ package dev.mayaqq.cynosure.core.bytecodecs.item
 import com.teamresourceful.bytecodecs.base.ByteCodec
 import com.teamresourceful.bytecodecs.base.`object`.ObjectByteCodec
 import dev.mayaqq.cynosure.core.bytecodecs.ByteCodecs
+import dev.mayaqq.cynosure.core.bytecodecs.LazyByteCodec
 import dev.mayaqq.cynosure.core.codecs.fieldOf
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 
-public object ItemStackByteCodec : ByteCodec<ItemStack> by ByteCodec.BYTE.dispatch(ItemStackByteCodec::pickByteCodec, ItemStackByteCodec::getType) {
+public object ItemStackByteCodec : ByteCodec<ItemStack> by LazyByteCodec({
+    ByteCodec.BYTE.dispatch(ItemStackByteCodec::pickByteCodec, ItemStackByteCodec::getType)
+}) {
 
     @JvmField
     public val EMPTY_ITEM: ByteCodec<ItemStack> = ByteCodec.unit(ItemStack.EMPTY)

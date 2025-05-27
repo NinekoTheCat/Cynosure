@@ -5,6 +5,7 @@ package dev.mayaqq.cynosure.utils
 import com.mojang.serialization.Codec
 import dev.mayaqq.cynosure.utils.Either.Left
 import dev.mayaqq.cynosure.utils.Either.Right
+import dev.mayaqq.cynosure.utils.dfu.DFUEither
 import dev.mayaqq.cynosure.utils.dfu.toCynosure
 import dev.mayaqq.cynosure.utils.dfu.toDFU
 
@@ -21,7 +22,7 @@ public sealed interface Either<out L, out R> {
 
     public companion object {
         public fun <L, R> codec(left: Codec<L>, right: Codec<R>): Codec<Either<L, R>> = Codec.either(left, right)
-            .xmap(com.mojang.datafixers.util.Either<L, R>::toCynosure, Either<L, R>::toDFU)
+            .xmap(DFUEither<L, R>::toCynosure, Either<L, R>::toDFU)
     }
 
     public data class Left<out L>(override val left: L) : Either<L, Nothing> {

@@ -22,8 +22,14 @@ public sealed class InteractionEvent(
         player: Player,
         hand: InteractionHand,
         public val entity: Entity,
-        public val hitVec: Vec3?
-    ) : InteractionEvent(level, player, hand)
+        public val hitVec: Vec3?,
+        public val phase: Phase
+    ) : InteractionEvent(level, player, hand) {
+        public enum class Phase {
+            SPECIFIC,
+            GENERAL
+        }
+    }
 
     public class AttackEntity(
         level: Level,
