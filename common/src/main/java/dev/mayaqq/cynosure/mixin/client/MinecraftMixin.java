@@ -15,11 +15,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import javax.annotation.Nullable;
-
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
-    @Shadow @Nullable public LocalPlayer player;
+    @Shadow public LocalPlayer player;
 
     @Shadow @Final private MusicManager musicManager;
 
