@@ -24,6 +24,7 @@
     "client.GameRendererMixin",
     "client.ItemStackMixin",
     "client.LevelRendererMixin",
+    "client.MinecraftMixin",
     "client.ParticleEngineMixin",
     "client.RenderBuffersMixin",
     "client.SplashManagerMixin",
