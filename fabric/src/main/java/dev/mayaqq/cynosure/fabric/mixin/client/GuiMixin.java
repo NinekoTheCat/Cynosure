@@ -2,6 +2,7 @@ package dev.mayaqq.cynosure.fabric.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.mayaqq.cynosure.client.events.render.BeginHudRenderEvent;
 import dev.mayaqq.cynosure.client.render.gui.HudOverlay;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,16 +34,16 @@ public abstract class GuiMixin {
     private Map<VanillaHud, List<HudOverlay>> hudOverlays = null;
 
     @Unique
-    private boolean blendEnabled = false;
-
-    @Unique
     private void renderPhaseOverlays(VanillaHud phase, GuiGraphics guiGraphics, float partialTick) {
+        boolean blendEnabled = GlStateManager.BLEND.mode.enabled;
+        boolean depthEnabled = GlStateManager.DEPTH.mode.enabled;
         for(HudOverlay overlay : hudOverlays.get(phase)) {
             RenderSystem.enableBlend();
             overlay.render((Gui) (Object) this, guiGraphics, partialTick);
         }
         // Restore render state
-        if(blendEnabled) RenderSystem.enableBlend(); else RenderSystem.disableBlend();
+        if (blendEnabled) RenderSystem.enableBlend(); else RenderSystem.disableBlend();
+        if (depthEnabled) RenderSystem.enableDepthTest(); else RenderSystem.disableDepthTest();
     }
 
     @Inject(
@@ -60,62 +62,7 @@ public abstract class GuiMixin {
     private void onBeginRenderHud(GuiGraphics guiGraphics, float partialTick, CallbackInfo ci) {
         var event = new BeginHudRenderEvent((Gui) (Object) this, guiGraphics, partialTick);
         if(MainBus.INSTANCE.post(event, null, null)) ci.cancel();
-        blendEnabled = false;
     }
-
-    @Inject(
-        method = "render",
-        at = @At(
-            value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableBlend()V"
-        )
-    )
-    private void saveBlendState(GuiGraphics guiGraphics, float partialTick, CallbackInfo ci) {
-        blendEnabled = true;
-    }
-
-    @Inject(
-        method = "render",
-        at = @At(
-            value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/systems/RenderSystem;disableBlend()V"
-        )
-    )
-    private void saveBlendStateOff(GuiGraphics guiGraphics, float partialTick, CallbackInfo ci) {
-        blendEnabled = false;
-    }
-
-    @Inject(
-        method = {"renderPlayerHealth", "renderEffects", "renderSavingIndicator"},
-        at = @At(
-            value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableBlend()V"
-        )
-    )
-    private void saveBlendEnabled1(GuiGraphics guiGraphics, CallbackInfo ci) {
-        blendEnabled = true;
-    }
-
-    @Inject(
-        method = "renderHotbar",
-        at = @At(
-            value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/systems/RenderSystem;disableBlend()V")
-    )
-    private void saveBlendDisabled1(float f, GuiGraphics guiGraphics, CallbackInfo ci) {
-        blendEnabled = false;
-    }
-
-    @Inject(
-        method = "renderHotbar",
-        at = @At(
-            value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableBlend()V")
-    )
-    private void saveBlendEnabled2(float f, GuiGraphics guiGraphics, CallbackInfo ci) {
-        blendEnabled = true;
-    }
-
 
     @Inject(
         method = "render",

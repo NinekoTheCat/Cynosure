@@ -1,9 +1,18 @@
 package dev.mayaqq.cynosure.events.api
 
+import dev.mayaqq.cynosure.CynosureInternal
 import dev.mayaqq.cynosure.utils.asm.descriptorToClassName
+import dev.mayaqq.cynosure.utils.asm.mappedValues
+import org.objectweb.asm.tree.ClassNode
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.util.function.Consumer
+import kotlin.metadata.ClassKind
+import kotlin.metadata.jvm.KotlinClassMetadata
+import kotlin.metadata.jvm.Metadata
+import kotlin.metadata.kind
 import kotlin.reflect.KClass
 
 /**
@@ -64,17 +73,76 @@ public open class EventBus {
 
     public fun <E : Event> unregister(type: Class<E>, callback: (E) -> Unit) {
         unregisterHandler(type)
-        //listeners.values.forEach { it.removeListener(callback) }
+        listeners.values.forEach { it.removeListener(callback) }
     }
 
     public fun post(
         event: Event,
         context: Any? = null,
         onError: ((Throwable) -> Unit)? = null
-    ): Boolean = TODO()
+    ): Boolean {
+        getHandler(event.javaClass).accept(event)
+        return event.isCancelled
+    }
+
+    @CynosureInternal
+    public fun registerClassNode(classNode: ClassNode) {
+
+        val metadata = classNode.visibleAnnotations
+            ?.find { it.desc.descriptorToClassName() == Metadata::class.qualifiedName }
+            ?.mappedValues
+            ?.let {
+                Metadata(
+                    kind = it["k"] as? Int,
+                    metadataVersion = (it["mv"] as? List<Int>)?.toIntArray(),
+                    data1 = (it["d1"] as? List<String>)?.toTypedArray(),
+                    data2 = (it["d2"] as? List<String>)?.toTypedArray(),
+                    extraString = it["xs"] as? String,
+                    packageName = it["pn"] as? String,
+                    extraInt = it["xi"] as? Int
+                )
+            }
+            ?.let(KotlinClassMetadata::readLenient)
+
+        val instanceFieldName: String?
+        val instanceFieldOwner: String?
+
+        if (metadata is KotlinClassMetadata.Class) {
+            val klass = metadata.kmClass
+            when (klass.kind) {
+                ClassKind.OBJECT -> {
+                    instanceFieldOwner = classNode.name
+                    instanceFieldName = "INSTANCE"
+                }
+                ClassKind.COMPANION_OBJECT -> {
+                    instanceFieldOwner = classNode.name.substringBeforeLast('\$')
+                    instanceFieldName = classNode.name.substringAfterLast('\$')
+                }
+                else ->  {
+                    instanceFieldOwner = null
+                    instanceFieldName = null
+                }
+            }
+        } else {
+            instanceFieldName = null
+            instanceFieldOwner = null
+        }
+
+        for (method in classNode.methods) {
+
+            if (method.parameters != null && method.parameters.size != 1) continue
+
+            val options = method.visibleAnnotations
+                ?.find { it.desc.descriptorToClassName() == Subscription::class.java.canonicalName }
+                ?.mappedValues
+                ?: continue
+
+            registerASMMethod(classNode.name, method.name, method.desc, options, instanceFieldName, instanceFieldOwner)
+        }
+    }
 
     @Suppress("UNCHECKED_CAST")
-    internal fun registerASMMethod(className: String, methodName: String, methodDesc: String, options: Map<String, Any?>, instanceFieldName: String?, instanceFieldOwner: String?) {
+    private fun registerASMMethod(className: String, methodName: String, methodDesc: String, options: Map<String, Any?>, instanceFieldName: String?, instanceFieldOwner: String?) {
 
         val priority = options["priority"] as? Int ?: 0
         val receiveCancelled = options["receiveCancelled"] as? Boolean ?: false
@@ -82,8 +150,11 @@ public open class EventBus {
         val event = Class.forName(methodDesc.substringAfter("(").substringBefore(")").descriptorToClassName())
         if (!Event::class.java.isAssignableFrom(event)) return
         unregisterHandler(event)
-        listeners.getOrPut(event as Class<Event>, ::EventListeners)
-            .addASMListener(className, methodName, methodDesc, instanceFieldName, instanceFieldOwner, event as Class<out Event>, priority, receiveCancelled)
+        listeners.getOrPut(event as Class<Event>, ::EventListeners).add(EventListener(
+            event, className, methodName, methodDesc,
+            instanceFieldName?.let { InvokerType.VirtualWithOwner(it, instanceFieldOwner!!) } ?: InvokerType.Static,
+            priority, receiveCancelled, "$className.$methodName$methodDesc"
+        ))
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -95,7 +166,7 @@ public open class EventBus {
         if (!Event::class.java.isAssignableFrom(event)) return
         unregisterHandler(event)
         listeners.getOrPut(event as Class<Event>, ::EventListeners)
-            .addMethodListener(method, instance, options.priority, options.receiveCancelled)
+            .addMethodListener(event, method, instance, options.priority, options.receiveCancelled)
     }
 
     internal fun unregisterMethod(method: Method) {
@@ -108,7 +179,9 @@ public open class EventBus {
         listeners.values.forEach { it.removeListener(method) }
     }
 
-    private fun <T : Event> getHandler(event: Class<T>): Consumer<Any> = handlers.getOrPut(event) { listeners[event]!!.compile() }
+    private fun <T : Event> getHandler(event: Class<T>): Consumer<Any> = handlers.getOrPut(event) {
+        getEventClasses(event).flatMapTo(EventListeners()) { listeners[it] ?: emptyList() }.createHandler(event)
+    }
 
     private fun unregisterHandler(clazz: Class<*>) = this.handlers.keys
         .filter { it.isAssignableFrom(clazz) }
@@ -130,3 +203,6 @@ public open class EventBus {
         return classes
     }
 }
+
+@CynosureInternal
+public val CynosureEventLogger: Logger = LoggerFactory.getLogger("Cynosure Event Registration")
