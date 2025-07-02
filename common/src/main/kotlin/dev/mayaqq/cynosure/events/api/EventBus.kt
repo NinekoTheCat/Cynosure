@@ -193,7 +193,7 @@ public open class EventBus {
     }
 
     private fun <T : Event> getHandler(event: Class<T>): Consumer<Any> = handlers.getOrPut(event) {
-        getEventClasses(event).flatMapTo(EventListeners()) { listeners[it] ?: emptyList() }.createHandler(event)
+        getEventClasses(event).flatMap { listeners[it] ?: emptyList() }.sortedBy { it.priority }.createHandler(event)
     }
 
     private fun unregisterHandler(clazz: Class<*>) = this.handlers.keys

@@ -11,7 +11,7 @@ import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
 import java.util.function.Consumer
 
-internal fun EventListeners.createHandler(event: Class<out Event>): Consumer<Any> {
+internal fun List<EventListener>.createHandler(event: Class<out Event>): Consumer<Any> {
     val cw = ClassWriter(0)
     val eventClass = event.canonicalName.replace('.', '/')
 
