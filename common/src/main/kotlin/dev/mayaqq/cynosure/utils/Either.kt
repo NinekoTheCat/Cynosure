@@ -11,6 +11,16 @@ import dev.mayaqq.cynosure.utils.dfu.toDFU
 
 public sealed interface Either<out L, out R> {
 
+    public data class Left<out L>(override val left: L) : Either<L, Nothing> {
+        override val right: Nothing?
+            get() = null
+    }
+
+    public data class Right<out R>(override val right: R) : Either<Nothing, R> {
+        override val left: Nothing?
+            get() = null
+    }
+
     public val left: L?
 
     public val right: R?
@@ -23,16 +33,6 @@ public sealed interface Either<out L, out R> {
     public companion object {
         public fun <L, R> codec(left: Codec<L>, right: Codec<R>): Codec<Either<L, R>> = Codec.either(left, right)
             .xmap(DFUEither<L, R>::toCynosure, Either<L, R>::toDFU)
-    }
-
-    public data class Left<out L>(override val left: L) : Either<L, Nothing> {
-        override val right: Nothing?
-            get() = null
-    }
-
-    public data class Right<out R>(override val right: R) : Either<Nothing, R> {
-        override val left: Nothing?
-            get() = null
     }
 }
 

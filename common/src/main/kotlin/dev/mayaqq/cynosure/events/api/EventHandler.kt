@@ -105,10 +105,7 @@ internal fun EventListeners.createHandler(event: Class<out Event>): Consumer<Any
     accept.visitEnd()
     cw.visitEnd()
 
-    val bytes = cw.toByteArray()
-    val file = File("dump.class")
-    file.writeBytes(bytes)
-    val lookup = MethodHandles.lookup().defineHiddenClass(bytes, true)
+    val lookup = MethodHandles.lookup().defineHiddenClass(cw.toByteArray(), true)
     val ctor = lookup.findConstructor(
         lookup.lookupClass(),
         MethodType.methodType(Nothing::class.javaPrimitiveType, instances.map(InvokerType.VirtualWithInstance::clazz))

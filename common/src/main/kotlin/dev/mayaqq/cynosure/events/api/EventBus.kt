@@ -28,28 +28,14 @@ public object MainBus : EventBus() {
  * will be added to the event bus
  */
 public fun Any.subscribeTo(bus: EventBus) {
-    val thing = if(this is KClass<*>) java else this
-    if(thing is Class<*>) {
-        thing.declaredMethods.filter { Modifier.isStatic(it.modifiers) }
-            .forEach { bus.registerMethod(it) }
-    } else {
-        javaClass.declaredMethods.filter { !Modifier.isStatic(it.modifiers) }
-            .forEach { bus.registerMethod(it, thing) }
-    }
+    bus.subscribe(this)
 }
 
 /**
  * Unsubscribe from an event bus
  */
 public fun Any.unsubscribeFrom(bus: EventBus) {
-    val thing = if(this is KClass<*>) java else this
-    if(thing is Class<*>) {
-        thing.declaredMethods.filter { Modifier.isStatic(it.modifiers) }
-            .forEach { bus.unregisterMethod(it) }
-    } else {
-        javaClass.declaredMethods.filter { !Modifier.isStatic(it.modifiers) }
-            .forEach { bus.unregisterMethod(it) }
-    }
+    bus.unsubscribe(this)
 }
 
 
@@ -67,6 +53,17 @@ public open class EventBus {
         listeners.getOrPut(clazz, ::EventListeners).addLambdaListener(clazz, handler, priority, receiveCancelled)
     }
 
+    public fun subscribe(instance: Any) {
+        val thing = if(this is KClass<*>) java else instance
+        if(thing is Class<*>) {
+            thing.declaredMethods.filter { Modifier.isStatic(it.modifiers) }
+                .forEach { registerMethod(it) }
+        } else {
+            javaClass.declaredMethods.filter { !Modifier.isStatic(it.modifiers) }
+                .forEach { registerMethod(it, thing) }
+        }
+    }
+
     public inline fun <reified E : Event> unregister(noinline callback: (E) -> Unit) {
         unregister(E::class.java, callback = callback)
     }
@@ -76,10 +73,26 @@ public open class EventBus {
         listeners.values.forEach { it.removeListener(callback) }
     }
 
+    public fun unsubscribe(instance: Any) {
+        val thing = if(this is KClass<*>) java else instance
+        if(thing is Class<*>) {
+            thing.declaredMethods.filter { Modifier.isStatic(it.modifiers) }
+                .forEach { unregisterMethod(it) }
+        } else {
+            javaClass.declaredMethods.filter { !Modifier.isStatic(it.modifiers) }
+                .forEach { unregisterMethod(it) }
+        }
+    }
+
+    @Deprecated("context and onError don't do anything anymore", replaceWith = ReplaceWith("post"))
     public fun post(
         event: Event,
         context: Any? = null,
         onError: ((Throwable) -> Unit)? = null
+    ): Boolean = post(event)
+
+    public fun post(
+        event: Event,
     ): Boolean {
         getHandler(event.javaClass).accept(event)
         return event.isCancelled
@@ -158,7 +171,7 @@ public open class EventBus {
     }
 
     @Suppress("UNCHECKED_CAST")
-    internal fun registerMethod(method: Method, instance: Any? = null) {
+    private fun registerMethod(method: Method, instance: Any? = null) {
         if (method.parameterCount != 1) return
         val options = method.getAnnotation(Subscription::class.java) ?: return
 
@@ -169,7 +182,7 @@ public open class EventBus {
             .addMethodListener(event, method, instance, options.priority, options.receiveCancelled)
     }
 
-    internal fun unregisterMethod(method: Method) {
+    private fun unregisterMethod(method: Method) {
         if (method.parameterCount != 1) return
         method.getAnnotation(Subscription::class.java) ?: return
 
