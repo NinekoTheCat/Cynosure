@@ -3,6 +3,7 @@ package dev.mayaqq.cynosure.events.api
 import dev.mayaqq.cynosure.utils.asm.descriptorToClassName
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
+import java.util.function.Consumer
 import kotlin.reflect.KClass
 
 /**
@@ -46,7 +47,7 @@ public fun Any.unsubscribeFrom(bus: EventBus) {
 public open class EventBus {
 
     private val listeners: MutableMap<Class<*>, EventListeners> = mutableMapOf()
-    private val handlers: MutableMap<Class<*>, EventHandler<*>> = mutableMapOf()
+    private val handlers: MutableMap<Class<*>, Consumer<Any>> = mutableMapOf()
 
     public inline fun <reified E : Event> register(priority: Int = 0, receiveCancelled: Boolean = false, noinline handler: (E) -> Unit) {
         register(E::class.java, priority, receiveCancelled, handler)
@@ -54,7 +55,7 @@ public open class EventBus {
 
     public fun <E : Event> register(clazz: Class<E>, priority: Int = 0, receiveCancelled: Boolean = false, handler: (E) -> Unit) {
         unregisterHandler(clazz)
-        listeners.getOrPut(clazz, ::EventListeners).addListener(handler, clazz, priority, receiveCancelled)
+        listeners.getOrPut(clazz, ::EventListeners).addLambdaListener(clazz, handler, priority, receiveCancelled)
     }
 
     public inline fun <reified E : Event> unregister(noinline callback: (E) -> Unit) {
@@ -63,14 +64,14 @@ public open class EventBus {
 
     public fun <E : Event> unregister(type: Class<E>, callback: (E) -> Unit) {
         unregisterHandler(type)
-        listeners.values.forEach { it.removeListener(callback) }
+        //listeners.values.forEach { it.removeListener(callback) }
     }
 
     public fun post(
         event: Event,
         context: Any? = null,
         onError: ((Throwable) -> Unit)? = null
-    ): Boolean = getHandler(event.javaClass).post(event, context, onError)
+    ): Boolean = TODO()
 
     @Suppress("UNCHECKED_CAST")
     internal fun registerASMMethod(className: String, methodName: String, methodDesc: String, options: Map<String, Any?>, instanceFieldName: String?, instanceFieldOwner: String?) {
@@ -94,7 +95,7 @@ public open class EventBus {
         if (!Event::class.java.isAssignableFrom(event)) return
         unregisterHandler(event)
         listeners.getOrPut(event as Class<Event>, ::EventListeners)
-            .addListener(method, instance, options)
+            .addMethodListener(method, instance, options.priority, options.receiveCancelled)
     }
 
     internal fun unregisterMethod(method: Method) {
@@ -107,13 +108,7 @@ public open class EventBus {
         listeners.values.forEach { it.removeListener(method) }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun <T : Event> getHandler(event: Class<T>): EventHandler<T> = handlers.getOrPut(event) {
-        EventHandler(
-            event,
-            getEventClasses(event).mapNotNull { listeners[it] }.flatMap(EventListeners::getListeners)
-        )
-    } as EventHandler<T>
+    private fun <T : Event> getHandler(event: Class<T>): Consumer<Any> = handlers.getOrPut(event) { listeners[event]!!.compile() }
 
     private fun unregisterHandler(clazz: Class<*>) = this.handlers.keys
         .filter { it.isAssignableFrom(clazz) }
