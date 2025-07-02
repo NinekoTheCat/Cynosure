@@ -95,10 +95,7 @@ internal fun List<EventListener>.createHandler(event: Class<out Event>): Consume
         }
     }
 
-    nextLabel?.let {
-        accept.visitLabel(it)
-    }
-
+    nextLabel?.let(accept::visitLabel)
     accept.visitFrame(F_FULL, 2, arrayOf<Any>(thisClass, eventClass), 0, emptyArray<Any>())
     accept.visitInsn(RETURN)
     accept.visitMaxs(if (maxMarker) 3 else 2, 2)
