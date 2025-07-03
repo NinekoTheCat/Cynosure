@@ -27,6 +27,7 @@ public object MainBus : EventBus() {
  * will be added to the event bus. If the receiver is a [KClass] or [Class] instance, any static methods of the class
  * will be added to the event bus
  */
+@JvmSynthetic
 public fun Any.subscribeTo(bus: EventBus) {
     bus.subscribe(this)
 }
@@ -34,6 +35,7 @@ public fun Any.subscribeTo(bus: EventBus) {
 /**
  * Unsubscribe from an event bus
  */
+@JvmSynthetic
 public fun Any.unsubscribeFrom(bus: EventBus) {
     bus.unsubscribe(this)
 }
