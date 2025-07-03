@@ -1,5 +1,6 @@
 package dev.mayaqq.cynosure
 
+import dev.mayaqq.cynosure.client.splash.CynosureSplashRenderer
 import dev.mayaqq.cynosure.events.PostInitEvent
 import dev.mayaqq.cynosure.events.api.post
 import dev.mayaqq.cynosure.events.fapiFeed

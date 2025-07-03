@@ -3,6 +3,7 @@ package dev.mayaqq.cynosure.core
 import dev.mayaqq.cynosure.core.mod.Mod
 import net.fabricmc.api.EnvType
 import net.fabricmc.loader.api.FabricLoader
+import net.fabricmc.loader.impl.launch.FabricLauncherBase
 import net.minecraft.client.Minecraft
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.TickTask
@@ -63,4 +64,6 @@ internal object GameInstanceImpl : GameInstance {
         return if (side == Environment.CLIENT) Minecraft.getInstance()
         else currentServer ?: error("Cannot get server executor before server is loaded")
     }
+
+    override fun getClassBytes(className: String): ByteArray = FabricLauncherBase.getLauncher().getClassByteArray(className, false)
 }

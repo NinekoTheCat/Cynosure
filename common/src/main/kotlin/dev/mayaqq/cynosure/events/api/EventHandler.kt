@@ -1,5 +1,6 @@
 package dev.mayaqq.cynosure.events.api
 
+import dev.mayaqq.cynosure.DEBUG_DIR
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Label
@@ -92,21 +93,21 @@ private fun List<EventListener>.createPartHandler(event: Class<out Event>, nextH
         when (val invoker = listener.invokerType) {
             InvokerType.Static -> {
                 accept.visitVarInsn(ALOAD, 1)
-                if (listener.event != event) accept.visitTypeInsn(CHECKCAST, Type.getDescriptor(event))
+                if (listener.event != event) accept.visitTypeInsn(CHECKCAST, listener.event.name.replace('.', '/'))
                 accept.visitMethodInsn(INVOKESTATIC, listener.className, listener.methodName, listener.methodDesc, false)
             }
             is InvokerType.VirtualWithInstance -> {
                 accept.visitVarInsn(ALOAD, 0)
                 accept.visitFieldInsn(GETFIELD, thisClass, "instance$${instances.indexOf(invoker)}", "L${listener.className};")
                 accept.visitVarInsn(ALOAD, 1)
-                if (listener.event != event) accept.visitTypeInsn(CHECKCAST, Type.getDescriptor(event))
+                if (listener.event != event) accept.visitTypeInsn(CHECKCAST, listener.event.name.replace('.', '/'))
                 accept.visitMethodInsn(invoker.opcode, listener.className, listener.methodName, listener.methodDesc, invoker.clazz.isInterface)
                 maxMarker = true
             }
             is InvokerType.VirtualWithOwner -> {
-                accept.visitFieldInsn(GETSTATIC, invoker.ownerClassName, invoker.ownerFieldName, "L${listener.className};")
+                accept.visitFieldInsn(GETSTATIC, invoker.ownerFieldName, invoker.ownerClassName, "L${listener.className};")
                 accept.visitVarInsn(ALOAD, 1)
-                if (listener.event != event) accept.visitTypeInsn(CHECKCAST, Type.getDescriptor(event))
+                if (listener.event != event) accept.visitTypeInsn(CHECKCAST, listener.event.name.replace('.', '/'))
                 accept.visitMethodInsn(invoker.opcode, listener.className, listener.methodName, listener.methodDesc, false)
                 maxMarker = true
             }
@@ -128,6 +129,12 @@ private fun List<EventListener>.createPartHandler(event: Class<out Event>, nextH
     accept.visitEnd()
     cw.visitEnd()
 
+    val bytes = cw.toByteArray()
+    if (System.getProperty("cynosure.dumpEventHandlers").toBoolean()) {
+        val dump = DEBUG_DIR.resolve("dump-${bytes.hashCode()}")
+        DEBUG_DIR.mkdirs()
+        dump.writeBytes(bytes)
+    }
     val lookup = MethodHandles.lookup().defineHiddenClass(cw.toByteArray(), true)
     val ctor = lookup.findConstructor(
         lookup.lookupClass(),

@@ -50,6 +50,10 @@ internal class GameInstanceImpl : GameInstance {
         return LogicalSidedProvider.WORKQUEUE.get(side.toForge())
     }
 
+    override fun getClassBytes(className: String): ByteArray {
+        TODO("Not yet implemented")
+    }
+
     private fun Environment.toForge(): LogicalSide = when (this) {
         Environment.CLIENT -> LogicalSide.CLIENT
         Environment.SERVER -> LogicalSide.SERVER
