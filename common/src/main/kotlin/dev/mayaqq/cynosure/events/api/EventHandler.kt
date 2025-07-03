@@ -1,12 +1,10 @@
 package dev.mayaqq.cynosure.events.api
 
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet
-import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.Type
-import java.io.File
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
 import java.util.function.Consumer

@@ -1,9 +1,9 @@
 package dev.mayaqq.cynosure.events.api
 
+import org.objectweb.asm.Opcodes.INVOKEVIRTUAL
 import org.objectweb.asm.Type
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
-import org.objectweb.asm.Opcodes.*
 
 internal typealias EventListeners = ArrayList<EventListener>
 

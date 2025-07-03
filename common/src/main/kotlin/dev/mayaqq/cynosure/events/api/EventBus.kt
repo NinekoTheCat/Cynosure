@@ -59,7 +59,7 @@ public open class EventBus {
             thing.declaredMethods.filter { Modifier.isStatic(it.modifiers) }
                 .forEach { registerMethod(it) }
         } else {
-            javaClass.declaredMethods.filter { !Modifier.isStatic(it.modifiers) }
+            thing.javaClass.declaredMethods.filter { !Modifier.isStatic(it.modifiers) }
                 .forEach { registerMethod(it, thing) }
         }
     }
@@ -79,7 +79,7 @@ public open class EventBus {
             thing.declaredMethods.filter { Modifier.isStatic(it.modifiers) }
                 .forEach { unregisterMethod(it) }
         } else {
-            javaClass.declaredMethods.filter { !Modifier.isStatic(it.modifiers) }
+            thing.javaClass.declaredMethods.filter { !Modifier.isStatic(it.modifiers) }
                 .forEach { unregisterMethod(it) }
         }
     }
