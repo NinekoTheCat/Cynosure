@@ -5,11 +5,24 @@ import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.Type
+import java.io.File
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
 import java.util.function.Consumer
 
+private const val SPLIT_POINT = 200
+
 internal fun List<EventListener>.createHandler(event: Class<out Event>): Consumer<Any> {
+    var consumer: Consumer<Any>? = null
+    var i = size;
+    while (i >= SPLIT_POINT) {
+        consumer = subList(i - SPLIT_POINT, i).createPartHandler(event, consumer)
+        i -= SPLIT_POINT
+    }
+    return if (i > 0) subList(0, i).createPartHandler(event, consumer) else consumer ?: Consumer {}
+}
+
+private fun List<EventListener>.createPartHandler(event: Class<out Event>, nextHandler: Consumer<Any>?): Consumer<Any> {
     val cw = ClassWriter(0)
     val eventClass = event.canonicalName.replace('.', '/')
 
@@ -25,7 +38,7 @@ internal fun List<EventListener>.createHandler(event: Class<out Event>): Consume
 
     val init = cw.visitMethod(
         ACC_PRIVATE, "<init>",
-        "(${instances.joinToString("") { Type.getDescriptor(it.clazz) }})V",
+        "(${instances.joinToString("") { Type.getDescriptor(it.clazz) } + (nextHandler?.let { "Ljava/util/function/Consumer;" } ?: "")})V",
         null, null
     )
     init.visitCode()
@@ -40,8 +53,15 @@ internal fun List<EventListener>.createHandler(event: Class<out Event>): Consume
         init.visitFieldInsn(PUTFIELD, thisClass, "instance$$index", desc)
     }
 
+    if (nextHandler != null) {
+        cw.visitField(ACC_PRIVATE or ACC_FINAL, "next", "Ljava/util/function/Consumer;", null, null)
+        init.visitVarInsn(ALOAD, 0)
+        init.visitVarInsn(ALOAD, instances.size + 1)
+        init.visitFieldInsn(PUTFIELD, thisClass, "next", "Ljava/util/function/Consumer;")
+    }
+
     init.visitInsn(RETURN)
-    init.visitMaxs(2, instances.size + 1)
+    init.visitMaxs(2, instances.size + if (nextHandler != null) 2 else 1)
     init.visitEnd()
 
 
@@ -95,6 +115,12 @@ internal fun List<EventListener>.createHandler(event: Class<out Event>): Consume
 
     nextLabel?.let(accept::visitLabel)
     accept.visitFrame(F_FULL, 2, arrayOf<Any>(thisClass, eventClass), 0, emptyArray<Any>())
+    if (nextHandler != null) {
+        accept.visitVarInsn(ALOAD, 0)
+        accept.visitFieldInsn(GETFIELD, thisClass, "next", "Ljava/util/function/Consumer;")
+        accept.visitVarInsn(ALOAD, 1)
+        accept.visitMethodInsn(INVOKEINTERFACE, "java/util/function/Consumer", "accept", "(Ljava/lang/Object;)V", true)
+    }
     accept.visitInsn(RETURN)
     accept.visitMaxs(if (maxMarker) 3 else 2, 2)
     accept.visitEnd()
@@ -103,8 +129,11 @@ internal fun List<EventListener>.createHandler(event: Class<out Event>): Consume
     val lookup = MethodHandles.lookup().defineHiddenClass(cw.toByteArray(), true)
     val ctor = lookup.findConstructor(
         lookup.lookupClass(),
-        MethodType.methodType(Nothing::class.javaPrimitiveType, instances.map(InvokerType.VirtualWithInstance::clazz))
+        MethodType.methodType(Nothing::class.javaPrimitiveType, instances.map(InvokerType.VirtualWithInstance::clazz).let { if (nextHandler != null) it + Consumer::class.java else it })
     )
 
-    return ctor.invokeWithArguments(instances.map(InvokerType.VirtualWithInstance::instance)) as Consumer<Any>
+    return ctor.invokeWithArguments(
+        instances.map(InvokerType.VirtualWithInstance::instance)
+            .let { if (nextHandler != null) it + nextHandler else it }
+    ) as Consumer<Any>
 }

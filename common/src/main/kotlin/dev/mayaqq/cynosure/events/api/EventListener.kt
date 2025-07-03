@@ -4,15 +4,16 @@ import org.objectweb.asm.Opcodes.INVOKEVIRTUAL
 import org.objectweb.asm.Type
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
+import java.util.LinkedList
 
-internal typealias EventListeners = ArrayList<EventListener>
+internal typealias EventListeners = LinkedList<EventListener>
 
 internal fun EventListeners.removeListener(ref: Any) {
     removeAll { it.ref == ref }
 }
 
-internal fun <E : Event> EventListeners.addLambdaListener(clazz: Class<*>, handler: (E) -> Unit, priority: Int, receiveCancelled: Boolean) {
-
+internal fun <E : Event> EventListeners.addLambdaListener(clazz: Class<E>, handler: (E) -> Unit, priority: Int, receiveCancelled: Boolean) {
+    addMethodListener(clazz, handler::class.java.getDeclaredMethod("invoke", clazz), handler, priority, receiveCancelled)
 }
 
 internal fun EventListeners.addMethodListener(event: Class<out Event>, method: Method, instance: Any?, priority: Int, receiveCancelled: Boolean) {
