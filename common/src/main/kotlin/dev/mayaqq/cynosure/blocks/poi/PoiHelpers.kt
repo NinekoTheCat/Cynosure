@@ -15,13 +15,19 @@ import java.util.stream.Stream
 import kotlin.jvm.optionals.getOrNull
 
 public object PoiHelpers {
-    public fun getBlockStates(block: Block): MutableSet<BlockState?> {
+    public fun getBlockStates(block: Block): MutableSet<BlockState> {
         return ImmutableSet.copyOf(block.stateDefinition.possibleStates)
     }
 
+    public fun Block.getBlockStates(): MutableSet<BlockState> = getBlockStates(this)
+
     public fun poi(block: Block): PoiType = PoiType(getBlockStates(block), 0, 1)
+    public fun poi(vararg blocks: Block): PoiType = PoiType(blocks.toList().map {
+            getBlockStates(it)
+        }.fold(setOf()) {acc, set -> acc union set}, 0, 1)
 
     public fun poiFactory(block: Block): () -> PoiType = { poi(block) }
+    public fun poiFactory(vararg blocks: Block): () -> PoiType = { poi(*blocks) }
 
     public fun registerState(poi: PoiType) {
         PoiTypesInvoker.registerBlockStates(poi.holder()?: return, poi.matchingStates)
