@@ -13,9 +13,10 @@ import net.minecraft.util.RandomSource
 
 
 public class CynosureSplashRenderer(random: RandomSource) : SplashRenderer("") {
-    private val splash: Component = CynosureSplashLoader.splashes[random.nextInt(CynosureSplashLoader.splashes.size)];
+    private val splash: Component? = if (CynosureSplashLoader.splashes.isNotEmpty()) CynosureSplashLoader.splashes[random.nextInt(CynosureSplashLoader.splashes.size)] else null
 
     public override fun render(graphics: GuiGraphics, screenWidth: Int, font: Font, color: Int) {
+        if (splash == null) return
         graphics.pushPop {
             translate(screenWidth.toFloat() / 2.0f + 123.0f, 69.0f, 0.0f)
             mulPose(Axis.ZP.rotationDegrees(-20.0f))

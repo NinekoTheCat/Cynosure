@@ -55,7 +55,7 @@ public abstract class EventBus(private val id: String) {
     }
 
     public fun subscribe(instance: Any) {
-        val thing = if(this is KClass<*>) java else instance
+        val thing = if(instance is KClass<*>) instance.java else instance
         if(thing is Class<*>) {
             thing.declaredMethods.filter { Modifier.isStatic(it.modifiers) }
                 .forEach { registerMethod(it) }
@@ -75,7 +75,7 @@ public abstract class EventBus(private val id: String) {
     }
 
     public fun unsubscribe(instance: Any) {
-        val thing = if(this is KClass<*>) java else instance
+        val thing = if(instance is KClass<*>) instance.java else instance
         if(thing is Class<*>) {
             thing.declaredMethods.filter { Modifier.isStatic(it.modifiers) }
                 .forEach { unregisterMethod(it) }
