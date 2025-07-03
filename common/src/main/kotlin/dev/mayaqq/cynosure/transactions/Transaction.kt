@@ -13,11 +13,11 @@ public abstract class Transaction protected constructor(
     // val variants so u can use commit and abort like keywords
     @TransactionsDsl
     public inline val commit: Unit
-        @JvmName("doCommit") get() { commit() }
+        @JvmName("doCommit") @JvmSynthetic get() { commit() }
 
     @TransactionsDsl
     public inline val abort: Unit
-        @JvmName("doAbort") get() { abort() }
+        @JvmName("doAbort") @JvmSynthetic get() { abort() }
 
     @TransactionsDsl
     public fun commit() {

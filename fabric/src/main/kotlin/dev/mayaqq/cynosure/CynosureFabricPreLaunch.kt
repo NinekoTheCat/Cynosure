@@ -5,8 +5,7 @@ import dev.mayaqq.cynosure.core.PlatformHooks
 import dev.mayaqq.cynosure.events.api.EventBus
 import dev.mayaqq.cynosure.events.api.EventSubscriber
 import dev.mayaqq.cynosure.events.api.MainBus
-import dev.mayaqq.cynosure.events.internal.CynosureEventLogger
-import dev.mayaqq.cynosure.events.internal.subscribeASMMethods
+import dev.mayaqq.cynosure.events.api.CynosureEventLogger
 import dev.mayaqq.cynosure.internal.boolean
 import dev.mayaqq.cynosure.internal.getCynosureValue
 import dev.mayaqq.cynosure.utils.asm.descriptorToClassName
@@ -40,8 +39,8 @@ internal fun onPreLaunch() {
         .filter {
             it.metadata.getCynosureValue(AUTOSUB_KEY).boolean
         }
-        .flatMapMerge(16) { mod: ModContainer ->
-            mod.rootPaths.asFlow().flatMapMerge(16) { path ->
+        .flatMapMerge(32) { mod: ModContainer ->
+            mod.rootPaths.asFlow().flatMapMerge(32) { path ->
                 path.walk().asFlow()
                     .filter { it.extension == "class" }
                     .map { mod to path.relativize(it) }
@@ -69,9 +68,6 @@ private fun subscribeClasses(mod: ModContainer, classPath: Path) {
 
     val subscriberData = annotation.mappedValues
 
-    // TODO: Sided event handlers
-    //val env = subscriberData["env"]
-    //if (env != null && env != PlatformHooks.environment) return@onEach
     val env = (subscriberData["env"] as? List<Array<String>>)?.map { Environment.valueOf(it[1]) }
     if (env?.contains(PlatformHooks.environment) == false) return
 
@@ -81,7 +77,7 @@ private fun subscribeClasses(mod: ModContainer, classPath: Path) {
                 Class.forName(it.className).kotlin.objectInstance as? EventBus
             } ?: MainBus
 
-        subscribeASMMethods(bus, cn)
+        bus.registerClassNode(cn)
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment || System.getProperty("cynosure.logEventSubscribers").toBoolean())
             CynosureEventLogger.info("Registered cynosure event subscriber for mod ${mod.metadata.id}: $className to bus $bus")

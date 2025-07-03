@@ -85,10 +85,10 @@ public fun onPlayerInteract(event: PlayerInteractEvent) {
             event.level, event.entity, event.hand, event.pos, event.face!!
         ).post(context = event)
         is PlayerInteractEvent.EntityInteractSpecific -> InteractionEvent.UseEntity(
-            event.level, event.entity, event.hand, event.target, event.localPos
+            event.level, event.entity, event.hand, event.target, event.localPos, InteractionEvent.UseEntity.Phase.SPECIFIC
         ).post(context = event)
         is PlayerInteractEvent.EntityInteract -> InteractionEvent.UseEntity(
-            event.level, event.entity, event.hand, event.target, null
+            event.level, event.entity, event.hand, event.target, null, InteractionEvent.UseEntity.Phase.GENERAL
         ).post(context = event)
         is PlayerInteractEvent.RightClickItem -> InteractionEvent.UseItem(
             event.level, event.entity, event.hand

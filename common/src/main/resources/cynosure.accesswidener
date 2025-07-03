@@ -387,3 +387,11 @@ transitive-accessible field net/minecraft/server/level/ChunkMap$TrackedEntity se
 # ModelPart
 accessible class net/minecraft/client/model/geom/ModelPart$Polygon
 accessible class net/minecraft/client/model/geom/ModelPart$Vertex
+
+#GlStateManager
+accessible class com/mojang/blaze3d/platform/GlStateManager$BooleanState
+accessible class com/mojang/blaze3d/platform/GlStateManager$BlendState
+accessible class com/mojang/blaze3d/platform/GlStateManager$DepthState
+accessible field com/mojang/blaze3d/platform/GlStateManager BLEND Lcom/mojang/blaze3d/platform/GlStateManager$BlendState;
+accessible field com/mojang/blaze3d/platform/GlStateManager DEPTH Lcom/mojang/blaze3d/platform/GlStateManager$DepthState;
+accessible field com/mojang/blaze3d/platform/GlStateManager$BooleanState enabled Z

@@ -49,7 +49,7 @@ public fun VoxelShape.rotatedCopy(rotation: Vec3): VoxelShape {
     val result = MutableObject(Shapes.empty())
     val center = Vec3(8.0, 8.0, 8.0)
 
-    this.forAllBoxes { x1: Double, y1: Double, z1: Double, x2: Double, y2: Double, z2: Double ->
+    this.forAllBoxes { x1, y1, z1, x2, y2, z2 ->
         var v1 = Vec3(x1, y1, z1).scale(16.0)
             .subtract(center)
         var v2 = Vec3(x2, y2, z2).scale(16.0)

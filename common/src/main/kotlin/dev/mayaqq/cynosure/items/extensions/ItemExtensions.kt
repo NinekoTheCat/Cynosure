@@ -57,10 +57,11 @@ public fun interface ItemEntityTickListener : ItemExtension {
 }
 
 /**
- * An extension providing itemstack dependant furnace burn times
+ * An extension providing itemstack dependant furnace burn times.
+ * Returning null leaves the original value unchanged
  */
 public fun interface CustomFurnaceFuel : ItemExtension {
-    public fun getItemBurnTime(stack: ItemStack, recipeType: RecipeType<*>?): Int
+    public fun getItemBurnTime(stack: ItemStack, recipeType: RecipeType<*>?): Int?
 }
 
 /**

@@ -6,8 +6,7 @@ import dev.mayaqq.cynosure.core.PlatformHooks
 import dev.mayaqq.cynosure.events.api.EventBus
 import dev.mayaqq.cynosure.events.api.EventSubscriber
 import dev.mayaqq.cynosure.events.api.MainBus
-import dev.mayaqq.cynosure.events.internal.CynosureEventLogger
-import dev.mayaqq.cynosure.events.internal.subscribeASMMethods
+import dev.mayaqq.cynosure.events.api.CynosureEventLogger
 import dev.mayaqq.cynosure.utils.asm.getClassByteArray
 import net.minecraftforge.fml.ModList
 import org.objectweb.asm.ClassReader
@@ -35,7 +34,7 @@ internal fun gatherEventSubscribers() {
                 val cn = ClassNode()
                 cr.accept(cn, ClassReader.SKIP_FRAMES)
                 CynosureEventLogger.warn("meow {}", cn)
-                subscribeASMMethods(bus, cn)
+                bus.registerClassNode(cn)
             } catch(e: Exception) {
                 CynosureEventLogger.error("Failed to subscribe to events", e)
             }

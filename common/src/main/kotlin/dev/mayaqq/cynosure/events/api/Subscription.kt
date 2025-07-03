@@ -23,10 +23,10 @@ public annotation class Subscription(
 ) {
 
     public companion object {
-        public const val HIGHEST: Int = -2000000
+        public const val HIGHEST: Int = Int.MIN_VALUE
         public const val HIGH: Int = -100000
         public const val LOW: Int = 100000
-        public const val LOWEST: Int = 2000000
+        public const val LOWEST: Int = Int.MAX_VALUE
     }
 }
 
@@ -42,10 +42,15 @@ public annotation class Subscription(
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FILE, AnnotationTarget.CLASS)
 public annotation class EventSubscriber(
+
+    /**
+     * Environment in which this event will be registered
+     */
+    vararg val env: Environment = [Environment.SERVER, Environment.CLIENT],
+
     /**
      * Event bus object to add the subscriptions to. Defaults to [MainBus]
      */
-    val bus: KClass<out EventBus> = MainBus::class,
+    val bus: KClass<out EventBus> = MainBus::class
 
-    vararg val env: Environment = [Environment.SERVER, Environment.CLIENT]
 )

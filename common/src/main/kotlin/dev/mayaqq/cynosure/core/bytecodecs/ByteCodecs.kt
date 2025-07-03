@@ -116,6 +116,8 @@ public object ByteCodecs {
         return ByteCodec.BOOLEAN.dispatch(fun(right) = if (right) r else l, Either<L, R>::isRight)
     }
 
+    public fun <T> lazy(initializer: () -> ByteCodec<T>): ByteCodec<T> = LazyByteCodec(initializer)
+
     @JvmStatic
     public fun <T> registry(map: IdMap<T>): ByteCodec<T> {
         return IdMapByteCodec(map)
