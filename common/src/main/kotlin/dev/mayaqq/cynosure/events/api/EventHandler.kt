@@ -124,7 +124,7 @@ private fun List<EventListener>.createPartHandler(event: Class<out Event>, nextH
         accept.visitMethodInsn(INVOKEINTERFACE, "java/util/function/Consumer", "accept", "(Ljava/lang/Object;)V", true)
     }
     accept.visitInsn(RETURN)
-    accept.visitMaxs(if (maxMarker) 3 else 2, 2)
+    accept.visitMaxs(if (maxMarker || nextHandler != null) 3 else 2, 2)
     accept.visitEnd()
     cw.visitEnd()
 
