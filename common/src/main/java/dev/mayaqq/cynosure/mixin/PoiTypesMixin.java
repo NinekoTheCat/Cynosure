@@ -1,6 +1,6 @@
 package dev.mayaqq.cynosure.mixin;
 
-import dev.mayaqq.cynosure.blocks.PoiTypeRegistryAccessorKt;
+import dev.mayaqq.cynosure.blocks.poi.PoiTypeRegistryAccessorKt;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;

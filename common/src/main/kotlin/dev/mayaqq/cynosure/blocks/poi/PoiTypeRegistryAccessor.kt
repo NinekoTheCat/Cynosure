@@ -1,4 +1,4 @@
-package dev.mayaqq.cynosure.blocks
+package dev.mayaqq.cynosure.blocks.poi
 
 import net.minecraft.world.level.block.BedBlock
 
