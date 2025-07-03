@@ -42,10 +42,15 @@ public annotation class Subscription(
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FILE, AnnotationTarget.CLASS)
 public annotation class EventSubscriber(
+
+    /**
+     * Environment in which this event will be registered
+     */
+    vararg val env: Environment = [Environment.SERVER, Environment.CLIENT],
+
     /**
      * Event bus object to add the subscriptions to. Defaults to [MainBus]
      */
-    val bus: KClass<out EventBus> = MainBus::class,
+    val bus: KClass<out EventBus> = MainBus::class
 
-    vararg val env: Environment = [Environment.SERVER, Environment.CLIENT]
 )

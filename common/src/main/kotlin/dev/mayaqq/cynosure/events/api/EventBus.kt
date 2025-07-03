@@ -18,9 +18,7 @@ import kotlin.reflect.KClass
 /**
  * Main event bus where all minecraft events are run
  */
-public object MainBus : EventBus() {
-    override fun toString(): String = "main"
-}
+public object MainBus : EventBus("main")
 
 /**
  * Subscribe to an event bus. If the receiver is an instance or object any instance method marked with [Subscription]
@@ -41,7 +39,7 @@ public fun Any.unsubscribeFrom(bus: EventBus) {
 }
 
 
-public open class EventBus {
+public abstract class EventBus(private val id: String) {
 
     private val listeners: MutableMap<Class<*>, EventListeners> = mutableMapOf()
     private val handlers: MutableMap<Class<*>, Consumer<Any>> = mutableMapOf()
@@ -219,6 +217,8 @@ public open class EventBus {
         }
         return classes
     }
+
+    override fun toString(): String  = id
 }
 
 @CynosureInternal
