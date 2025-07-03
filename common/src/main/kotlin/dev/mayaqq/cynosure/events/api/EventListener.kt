@@ -1,5 +1,6 @@
 package dev.mayaqq.cynosure.events.api
 
+import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Opcodes.INVOKEVIRTUAL
 import org.objectweb.asm.Type
 import java.lang.reflect.Method
@@ -8,18 +9,28 @@ import java.util.LinkedList
 
 internal typealias EventListeners = LinkedList<EventListener>
 
+private val FUNCTION_1 = Class.forName("kotlin.jvm.functions.Function1")
+
+
 internal fun EventListeners.removeListener(ref: Any) {
     removeAll { it.ref == ref }
 }
 
-internal fun <E : Event> EventListeners.addLambdaListener(clazz: Class<E>, handler: (E) -> Unit, priority: Int, receiveCancelled: Boolean) {
-    addMethodListener(clazz, handler::class.java.getDeclaredMethod("invoke", clazz), handler, priority, receiveCancelled)
+internal fun <E : Event> EventListeners.addLambdaListener(event: Class<E>, handler: (E) -> Unit, priority: Int, receiveCancelled: Boolean) {
+    add(EventListener(
+        event,
+        "kotlin/jvm/functions/Function1",
+        "invoke",
+        "(Ljava/lang/Object;)Ljava/lang/Object;",
+        InvokerType.VirtualWithInstance(handler, FUNCTION_1, Opcodes.INVOKEINTERFACE),
+        priority, receiveCancelled, handler
+    ))
 }
 
 internal fun EventListeners.addMethodListener(event: Class<out Event>, method: Method, instance: Any?, priority: Int, receiveCancelled: Boolean) {
      add(EventListener(
          event,
-         method.declaringClass.canonicalName.replace('.', '/'),
+         method.declaringClass.name.replace('.', '/'),
          method.name,
          Type.getMethodDescriptor(method),
          if (Modifier.isStatic(method.modifiers)) InvokerType.Static else InvokerType.VirtualWithInstance(instance!!, method.declaringClass),

@@ -24,7 +24,7 @@ internal fun List<EventListener>.createHandler(event: Class<out Event>): Consume
 
 private fun List<EventListener>.createPartHandler(event: Class<out Event>, nextHandler: Consumer<Any>?): Consumer<Any> {
     val cw = ClassWriter(0)
-    val eventClass = event.canonicalName.replace('.', '/')
+    val eventClass = event.name.replace('.', '/')
 
     val thisClass = "dev/mayaqq/cynosure/events/api/EventHandler$${eventClass.replace('/', '$')}"
     cw.visit(
@@ -111,6 +111,8 @@ private fun List<EventListener>.createPartHandler(event: Class<out Event>, nextH
                 maxMarker = true
             }
         }
+
+        if (!listener.methodDesc.endsWith("V")) accept.visitInsn(POP)
     }
 
     nextLabel?.let(accept::visitLabel)
