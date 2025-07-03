@@ -23,10 +23,10 @@ public annotation class Subscription(
 ) {
 
     public companion object {
-        public const val HIGHEST: Int = -2000000
+        public const val HIGHEST: Int = Int.MIN_VALUE
         public const val HIGH: Int = -100000
         public const val LOW: Int = 100000
-        public const val LOWEST: Int = 2000000
+        public const val LOWEST: Int = Int.MAX_VALUE
     }
 }
 
