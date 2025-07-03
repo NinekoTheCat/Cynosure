@@ -58,14 +58,28 @@ public abstract class ReturningEvent<R> : Event {
 /**
  * Post this event to the event bus, defaults to the [MainBus]
  */
+@Deprecated(message = "meow")
 public fun Event.post(bus: EventBus = MainBus, context: Any? = null, onError: ((Throwable) -> Unit)? = null) : Boolean {
     return bus.post(this, context, onError)
 }
 
 /**
+ * Post this event to the event bus, defaults to the [MainBus]
+ */
+public fun Event.post(bus: EventBus = MainBus) : Boolean {
+    return bus.post(this)
+}
+
+/**
  * Post this returning event to the event bus and get its result. Defaults to [MainBus]
  */
+@Deprecated(message = "meow")
 public fun <R> ReturningEvent<R>.post(bus: EventBus = MainBus, context: Any? = null, onError: ((Throwable) -> Unit)? = null): R? {
     bus.post(this, context, onError)
+    return result
+}
+
+public fun <R> ReturningEvent<R>.post(bus: EventBus = MainBus): R? {
+    bus.post(this)
     return result
 }

@@ -48,6 +48,7 @@ public abstract class EventBus(private val id: String) {
         register(E::class.java, priority, receiveCancelled, handler)
     }
 
+    @JvmOverloads
     public fun <E : Event> register(clazz: Class<E>, priority: Int = 0, receiveCancelled: Boolean = false, handler: (E) -> Unit) {
         unregisterHandler(clazz)
         listeners.getOrPut(clazz, ::EventListeners).addLambdaListener(clazz, handler, priority, receiveCancelled)
