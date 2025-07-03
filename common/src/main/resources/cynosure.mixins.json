@@ -16,6 +16,7 @@
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "accessor.ChunkMapAccessor",
+    "accessor.PoiTypesInvoker",
     "accessor.TrackedEntityAccessor"
   ],
   "client": [

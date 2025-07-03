@@ -17,6 +17,6 @@ public interface GameInstance {
         getEventLoop(side).execute(action)
     }
 
-    public fun getClassBytes(className: String): ByteArray
+    //public fun getClassBytes(className: String): ByteArray
 }
 

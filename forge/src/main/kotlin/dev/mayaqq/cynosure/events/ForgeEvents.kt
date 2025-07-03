@@ -186,7 +186,7 @@ public fun furnaceFuel(event: FurnaceFuelBurnTimeEvent) {
     val item = event.itemStack.item
     val customBurnTime = item.getExtension<CustomFurnaceFuel>()
     if (customBurnTime != null)  {
-        event.burnTime = customBurnTime.getItemBurnTime(event.itemStack, event.recipeType)
+        event.burnTime = customBurnTime.getItemBurnTime(event.itemStack, event.recipeType)!!
         event.isCanceled = true
         return
     }
