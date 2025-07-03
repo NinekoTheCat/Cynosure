@@ -4,7 +4,7 @@
  */
 package dev.mayaqq.cynosure.blocks.model
 
-import dev.mayaqq.cynosure.blocks.beds
+import dev.mayaqq.cynosure.blocks.poi.beds
 import net.minecraft.core.Direction
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.level.block.BedBlock
