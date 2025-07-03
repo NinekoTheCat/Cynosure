@@ -3,6 +3,7 @@ package dev.mayaqq.cynosure.client.events
 import com.mojang.blaze3d.vertex.VertexFormat
 import dev.mayaqq.cynosure.CynosureInternal
 import dev.mayaqq.cynosure.events.api.Event
+import dev.mayaqq.cynosure.events.api.SinglePostEvent
 import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.particle.ParticleRenderType
 import net.minecraft.client.particle.SpriteSet
@@ -13,6 +14,7 @@ import net.minecraft.resources.ResourceLocation
 import org.jetbrains.annotations.ApiStatus
 import kotlin.reflect.KMutableProperty0
 
+@SinglePostEvent
 public class ParticleFactoryRegistrationEvent(private val context: Context) : Event {
 
     public fun <T : ParticleOptions> register(type: ParticleType<T>, provider: ParticleProvider<T>) {
@@ -32,6 +34,7 @@ public class ParticleFactoryRegistrationEvent(private val context: Context) : Ev
     }
 }
 
+@SinglePostEvent
 public class ParticleRenderTypeRegistrationEvent(
     private val renderOrder: MutableList<ParticleRenderType>
 ) : Event {

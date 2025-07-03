@@ -5,9 +5,8 @@ import org.objectweb.asm.Opcodes.INVOKEVIRTUAL
 import org.objectweb.asm.Type
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
-import java.util.LinkedList
 
-internal typealias EventListeners = LinkedList<EventListener>
+internal typealias EventListeners = ArrayList<EventListener>
 
 private val FUNCTION_1 = Class.forName("kotlin.jvm.functions.Function1")
 

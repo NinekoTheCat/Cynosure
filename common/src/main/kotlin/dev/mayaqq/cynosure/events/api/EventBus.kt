@@ -194,11 +194,11 @@ public open class EventBus {
         listeners.values.forEach { it.removeListener(method) }
     }
 
-    private fun <T : Event> getHandler(event: Class<T>): Consumer<Any> = handlers.getOrPut(event) {
-        getEventClasses(event).flatMap { listeners[it] ?: emptyList() }
-            .sortedBy(EventListener::priority)
-            .createHandler(event)
-    }
+    private fun <T : Event> getHandler(event: Class<T>): Consumer<Any> = handlers[event] ?: getEventClasses(event)
+        .flatMap { listeners[it] ?: emptyList() }
+        .sortedBy(EventListener::priority)
+        .createHandler(event)
+        .also { if (!event.isAnnotationPresent(SinglePostEvent::class.java)) handlers[event] = it }
 
     private fun unregisterHandler(clazz: Class<*>) = this.handlers.keys
         .filter { it.isAssignableFrom(clazz) }

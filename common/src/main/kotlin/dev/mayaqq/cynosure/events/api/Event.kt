@@ -20,6 +20,13 @@ public interface Event {
 public annotation class RootEventClass
 
 /**
+ * Annotation marking an event as single-post. This prevents retaining of the event handler after the event is fired.
+ */
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.CLASS)
+public annotation class SinglePostEvent
+
+/**
  * Event base class with a simple cancelling implementation
  */
 @RootEventClass
