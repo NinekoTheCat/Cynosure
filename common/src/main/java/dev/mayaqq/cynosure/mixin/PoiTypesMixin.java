@@ -42,4 +42,5 @@ public class PoiTypesMixin {
         });
         BEDS = newBeds;
 	}
+    */
 }
