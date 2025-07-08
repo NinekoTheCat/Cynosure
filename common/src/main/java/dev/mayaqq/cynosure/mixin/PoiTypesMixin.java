@@ -1,6 +1,5 @@
 package dev.mayaqq.cynosure.mixin;
 
-import dev.mayaqq.cynosure.blocks.poi.PoiTypeRegistryAccessorKt;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,6 +20,7 @@ import java.util.stream.Collectors;
 @Mixin(PoiTypes.class)
 public class PoiTypesMixin {
 
+    /*
     @Mutable @Shadow @Final private static Set<BlockState> BEDS;
 
     @Inject(method = "<clinit>",
