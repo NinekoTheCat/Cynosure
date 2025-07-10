@@ -45,7 +45,7 @@ public fun ResourceKey<PoiType>.add(states: MutableSet<BlockState>) = BuiltInReg
 public fun PoiType.add(vararg blocks: Block) = this.add(states(*blocks))
 
 public fun PoiType.add(states: MutableSet<BlockState>) {
-    (this.matchingStates as PoiTypeAccessor).`cynosure$setBlockStates`(ImmutableSet.builder<BlockState?>()
+    (this as PoiTypeAccessor).`cynosure$setBlockStates`(ImmutableSet.builder<BlockState?>()
         .addAll(this.matchingStates)
         .addAll(states)
         .build())
