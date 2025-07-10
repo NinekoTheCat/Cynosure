@@ -4,7 +4,9 @@
  */
 package dev.mayaqq.cynosure.blocks.model
 
+import dev.mayaqq.cynosure.blocks.poi.add
 import net.minecraft.core.Direction
+import net.minecraft.world.entity.ai.village.poi.PoiTypes
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.level.block.BedBlock
 import net.minecraft.world.level.block.RenderShape
@@ -54,6 +56,9 @@ import net.minecraft.world.level.block.state.BlockState
 
 
 public class ModelBedBlock(properties: Properties, color: DyeColor? = null) : BedBlock(color, properties) {
+    init {
+        PoiTypes.HOME.add(this)
+    }
     override fun getRenderShape(state: BlockState): RenderShape = RenderShape.MODEL
     override fun skipRendering(state: BlockState, neigborState: BlockState, offset: Direction): Boolean = neigborState.block is BedBlock
 }
