@@ -1,6 +1,8 @@
 package dev.mayaqq.cynosure.blocks.poi
 
 import com.google.common.collect.ImmutableSet
+import dev.mayaqq.cynosure.blocks.poi.PoiHelpers.bStates
+import dev.mayaqq.cynosure.blocks.poi.PoiHelpers.states
 import dev.mayaqq.cynosure.mixin.accessor.PoiTypesInvoker
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
@@ -19,17 +21,6 @@ public object PoiHelpers {
         return ImmutableSet.copyOf(block.stateDefinition.possibleStates)
     }
 
-    public fun ResourceKey<PoiType>.add(vararg blocks: Block) = this.add(states(*blocks))
-    public fun ResourceKey<PoiType>.add(states: MutableSet<BlockState>) = BuiltInRegistries.POINT_OF_INTEREST_TYPE.get(this)?.add(states)
-
-    public fun PoiType.add(vararg blocks: Block) = this.add(states(*blocks))
-
-    public fun PoiType.add(states: MutableSet<BlockState>) {
-        this.matchingStates.addAll(states)
-        PoiTypesInvoker.registerBlockStates(this.holder(), states)
-    }
-
-    public fun Block.states(): MutableSet<BlockState> = bStates(this)
 
     public fun poi(vararg blocks: Block): PoiType = PoiType(states(*blocks), 0, 1)
 
@@ -43,12 +34,24 @@ public object PoiHelpers {
     public fun registerState(poi: PoiType) {
         PoiTypesInvoker.registerBlockStates(poi.holder()?: return, poi.matchingStates)
     }
-
-    public fun PoiType.key(): ResourceKey<PoiType>? = BuiltInRegistries.POINT_OF_INTEREST_TYPE.getResourceKey(this).getOrNull()
-    public fun ResourceKey<PoiType>.holder(): Holder<PoiType>? = BuiltInRegistries.POINT_OF_INTEREST_TYPE.getHolder(this).getOrNull()
-    public fun PoiType.holder(): Holder<PoiType>? = this.key()?.holder()
-    public fun PoiManager.inRange(poi: PoiType, pos: BlockPos, range: Int): Stream<PoiRecord> {
-        return this.getInRange({it.`is`(poi.key()?: return@getInRange false)}, pos, range, PoiManager.Occupancy.ANY)
-    }
-    public fun PoiManager.anyInRange(poi: PoiType, pos: BlockPos, range: Int): Boolean = this.inRange(poi, pos, range).toList().isNotEmpty()
 }
+
+public fun Block.states(): MutableSet<BlockState> = bStates(this)
+
+public fun ResourceKey<PoiType>.add(vararg blocks: Block) = this.add(states(*blocks))
+public fun ResourceKey<PoiType>.add(states: MutableSet<BlockState>) = BuiltInRegistries.POINT_OF_INTEREST_TYPE.get(this)?.add(states)
+
+public fun PoiType.add(vararg blocks: Block) = this.add(states(*blocks))
+
+public fun PoiType.add(states: MutableSet<BlockState>) {
+    this.matchingStates.addAll(states)
+    PoiTypesInvoker.registerBlockStates(this.holder(), states)
+}
+
+public fun PoiType.key(): ResourceKey<PoiType>? = BuiltInRegistries.POINT_OF_INTEREST_TYPE.getResourceKey(this).getOrNull()
+public fun ResourceKey<PoiType>.holder(): Holder<PoiType>? = BuiltInRegistries.POINT_OF_INTEREST_TYPE.getHolder(this).getOrNull()
+public fun PoiType.holder(): Holder<PoiType>? = this.key()?.holder()
+public fun PoiManager.inRange(poi: PoiType, pos: BlockPos, range: Int): Stream<PoiRecord> {
+    return this.getInRange({it.`is`(poi.key()?: return@getInRange false)}, pos, range, PoiManager.Occupancy.ANY)
+}
+public fun PoiManager.anyInRange(poi: PoiType, pos: BlockPos, range: Int): Boolean = this.inRange(poi, pos, range).toList().isNotEmpty()
