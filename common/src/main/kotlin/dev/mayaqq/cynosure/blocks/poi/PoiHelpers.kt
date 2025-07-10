@@ -3,6 +3,7 @@ package dev.mayaqq.cynosure.blocks.poi
 import com.google.common.collect.ImmutableSet
 import dev.mayaqq.cynosure.blocks.poi.PoiHelpers.bStates
 import dev.mayaqq.cynosure.blocks.poi.PoiHelpers.states
+import dev.mayaqq.cynosure.mixin.accessor.PoiTypeAccessor
 import dev.mayaqq.cynosure.mixin.accessor.PoiTypesInvoker
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
@@ -44,7 +45,10 @@ public fun ResourceKey<PoiType>.add(states: MutableSet<BlockState>) = BuiltInReg
 public fun PoiType.add(vararg blocks: Block) = this.add(states(*blocks))
 
 public fun PoiType.add(states: MutableSet<BlockState>) {
-    this.matchingStates.addAll(states)
+    (this.matchingStates as PoiTypeAccessor).`cynosure$setBlockStates`(ImmutableSet.builder<BlockState?>()
+        .addAll(this.matchingStates)
+        .addAll(states)
+        .build())
     PoiTypesInvoker.registerBlockStates(this.holder(), states)
 }
 
