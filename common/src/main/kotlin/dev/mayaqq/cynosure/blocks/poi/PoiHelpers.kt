@@ -19,12 +19,20 @@ public object PoiHelpers {
         return ImmutableSet.copyOf(block.stateDefinition.possibleStates)
     }
 
+    public fun PoiType.add(vararg blocks: Block) = this.add(states(*blocks))
+
+    public fun PoiType.add(states: MutableSet<BlockState>) {
+        this.matchingStates.addAll(states)
+        PoiTypesInvoker.registerBlockStates(this.holder(), states)
+    }
+
     public fun Block.states(): MutableSet<BlockState> = bStates(this)
 
-    public fun poi(block: Block): PoiType = PoiType(bStates(block), 0, 1)
-    public fun poi(vararg blocks: Block): PoiType = PoiType(blocks.toList().map {
-            bStates(it)
-        }.fold(setOf()) {acc, set -> acc union set}, 0, 1)
+    public fun poi(vararg blocks: Block): PoiType = PoiType(states(*blocks), 0, 1)
+
+    public fun states(vararg blocks: Block): MutableSet<BlockState> {
+        return (blocks.toList().map { block -> bStates(block) }.fold(setOf<BlockState>()) {acc, set -> acc union set}) as MutableSet
+    }
 
     public fun poiFactory(block: Block): () -> PoiType = { poi(block) }
     public fun poiFactory(vararg blocks: Block): () -> PoiType = { poi(*blocks) }
