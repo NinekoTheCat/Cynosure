@@ -19,6 +19,9 @@ public object PoiHelpers {
         return ImmutableSet.copyOf(block.stateDefinition.possibleStates)
     }
 
+    public fun ResourceKey<PoiType>.add(vararg blocks: Block) = this.add(states(*blocks))
+    public fun ResourceKey<PoiType>.add(states: MutableSet<BlockState>) = BuiltInRegistries.POINT_OF_INTEREST_TYPE.get(this)?.add(states)
+
     public fun PoiType.add(vararg blocks: Block) = this.add(states(*blocks))
 
     public fun PoiType.add(states: MutableSet<BlockState>) {
