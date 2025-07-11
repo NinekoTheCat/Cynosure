@@ -24,7 +24,7 @@ public object RenderTypeRegistry {
 
     @JvmField
     internal val PHASES: Map<BufferOutputStage, MutableList<RenderType>> = make(EnumMap(BufferOutputStage::class.java)) {
-        BufferOutputStage.entries.forEach { put(it, ArrayList()) };
+        BufferOutputStage.entries.forEach { put(it, ArrayList()) }
     }
 
     @JvmStatic
