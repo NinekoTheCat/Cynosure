@@ -1,6 +1,5 @@
 package dev.mayaqq.cynosure.mixin.client;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import dev.mayaqq.cynosure.music.MusicApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

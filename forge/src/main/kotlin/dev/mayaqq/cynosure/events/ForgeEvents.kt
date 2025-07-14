@@ -243,3 +243,11 @@ public fun onCommand(event: CommandEvent) {
     event.exception = evt.exception
     event.parseResults = evt.parseResults
 }
+
+@SubscribeEvent
+public fun onPlayerTick(event: PlayerTickEvent) {
+    when (event.phase) {
+        Phase.START -> dev.mayaqq.cynosure.events.entity.player.PlayerTickEvent.Begin(event.player).post(context = event)
+        Phase.END -> dev.mayaqq.cynosure.events.entity.player.PlayerTickEvent.End(event.player).post(context = event)
+    }
+}

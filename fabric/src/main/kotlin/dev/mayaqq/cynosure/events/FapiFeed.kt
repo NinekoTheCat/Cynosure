@@ -28,7 +28,7 @@ internal fun fapiFeed() {
         CommandRegistrationEvent(commandDispatcher, commandBuildContext, commandSelection).post()
     }
 
-    GameInstance // load gameinstane incase it hasnt been
+    GameInstance // load GameInstance in case it hasn't been
     //Lifecycle events
     ServerLifecycleEvents.SERVER_STARTING.register {
         GameInstanceImpl.onLoadServer(it)
@@ -83,5 +83,4 @@ internal fun fapiFeed() {
         if (player.isSpectator) return@register InteractionResult.PASS
         InteractionEvent.AttackEntity(level, player, interactionHand, entity).post() ?: InteractionResult.PASS
     }
-
 }

@@ -12,6 +12,7 @@
     "FuelRegistryMixin",
     "PersistentEntitySectionManagerMixin",
     "PiglinAiMixin",
+    "PlayerMixin",
     "RecipeBookTypeMixin",
     "ServerLevelMixin"
   ],
