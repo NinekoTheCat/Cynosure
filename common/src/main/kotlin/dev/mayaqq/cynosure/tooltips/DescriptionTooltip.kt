@@ -23,13 +23,14 @@ public class DescriptionTooltip(
         if (checkLanguage()) {
             rebuild(stack.item)
         }
-        addAll(lines)
+        addAll(1, lines)
     }
 
     private fun rebuild(stack: Item) {
         lines.clear()
         val key = stack.descriptionId + ".tooltip"
         // TODO: Split and all kinds of other stuff
+        lines.add(Component.empty())
         lines.add(Component.translatable(key).withStyle { it.withColor(theme.primaryColor.toInt()) })
     }
 
