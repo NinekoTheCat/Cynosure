@@ -1,6 +1,7 @@
 package dev.mayaqq.cynosure.tooltips
 
 import dev.mayaqq.cynosure.helpers.McFont
+import dev.mayaqq.cynosure.injection.client.javaLocale
 import dev.mayaqq.cynosure.items.extensions.CustomTooltip
 import dev.mayaqq.cynosure.utils.colors.Color
 import dev.mayaqq.cynosure.utils.colors.DarkGray
@@ -61,7 +62,7 @@ public class DescriptionTooltip(
         val lines = buildList {
             var totalWidth = 0
             var currentLine = ""
-            string.words().forEach { word ->
+            string.words(Minecraft.getInstance().javaLocale).forEach { word ->
                 val width = McFont.width(word.replace("_", ""))
                 if (totalWidth + width > MAX_LINE_WIDTH) {
                     if (totalWidth > 0) {

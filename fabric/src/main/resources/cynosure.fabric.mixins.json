@@ -21,6 +21,7 @@
     "client.EffectInstanceMixin",
     "client.EntityRenderersMixin",
     "client.GuiMixin",
+    "client.LanguageManagerMixin",
     "client.LevelRendererMixin",
     "client.MinecraftMixin"
   ],

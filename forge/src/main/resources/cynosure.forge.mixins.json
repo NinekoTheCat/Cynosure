@@ -8,6 +8,7 @@
     "PiglinAiMixin"
   ],
   "client": [
+    "client.LanguageManagerMixin",
     "client.LevelRendererAccessor",
     "client.LevelRendererMixin",
     "client.MinecraftAccessor"

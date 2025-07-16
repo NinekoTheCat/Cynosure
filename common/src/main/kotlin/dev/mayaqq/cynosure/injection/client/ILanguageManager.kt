@@ -1,6 +1,11 @@
 package dev.mayaqq.cynosure.injection.client
 
-public interface ILanguageManager {
+import net.minecraft.client.resources.language.LanguageManager
+import java.util.Locale
 
-    fun `cynosure$javaLocale`()
+public interface ILanguageManager {
+    public fun `cynosure$javaLocale`(): Locale
 }
+
+public val LanguageManager.javaLocale: Locale
+    get() = (this as ILanguageManager).`cynosure$javaLocale`()
