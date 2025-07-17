@@ -2,10 +2,10 @@ package dev.mayaqq.cynosure.client.internal
 
 import dev.mayaqq.cynosure.CynosureInternal
 import dev.mayaqq.cynosure.MODID
-import dev.mayaqq.cynosure.forge.mixin.client.MinecraftAccessor
 import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.PreparableReloadListener
+import net.minecraft.server.packs.resources.ReloadableResourceManager
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
@@ -27,7 +27,7 @@ internal class CynosureClientHooksImpl : CynosureClientHooks {
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             if (resourceLoaderEventFired) {
-                (Minecraft.getInstance() as MinecraftAccessor).resourceManager.registerReloadListener(listener)
+                (Minecraft.getInstance().resourceManager as ReloadableResourceManager).registerReloadListener(listener)
             } else {
                 DEFERRED_CLIENT_RELOAD_LISTENERS.add(listener)
             }

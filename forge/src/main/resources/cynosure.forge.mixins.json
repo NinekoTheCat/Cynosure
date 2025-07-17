@@ -10,8 +10,7 @@
   "client": [
     "client.LanguageManagerMixin",
     "client.LevelRendererAccessor",
-    "client.LevelRendererMixin",
-    "client.MinecraftAccessor"
+    "client.LevelRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
