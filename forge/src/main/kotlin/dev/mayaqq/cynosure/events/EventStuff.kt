@@ -1,5 +1,6 @@
 package dev.mayaqq.cynosure.events
 
+import dev.mayaqq.cynosure.Cynosure
 import dev.mayaqq.cynosure.CynosureForge
 import dev.mayaqq.cynosure.core.Environment
 import dev.mayaqq.cynosure.core.PlatformHooks
@@ -9,6 +10,7 @@ import dev.mayaqq.cynosure.events.api.MainBus
 import dev.mayaqq.cynosure.events.api.CynosureEventLogger
 import dev.mayaqq.cynosure.utils.asm.getClassByteArray
 import net.minecraftforge.fml.ModList
+import net.minecraftforge.fml.loading.moddiscovery.ModAnnotation
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.Type
 import org.objectweb.asm.tree.ClassNode
@@ -24,7 +26,7 @@ internal fun gatherEventSubscribers() {
                 // TODO: Sided event handleers
                 //val side = annotation.annotationData["env"]
                 //if (side != null && side != PlatformHooks.environment) continue
-                val env = (annotation.annotationData["env"] as? List<Array<String>>)?.map { Environment.valueOf(it[1]) }
+                val env = (annotation.annotationData["env"] as? List<ModAnnotation.EnumHolder>)?.map { Environment.valueOf(it.value) }
                 if (env?.contains(PlatformHooks.environment) == false) continue
 
                 val bus = (annotation.annotationData["bus"] as? String)
