@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState
 
 public object SidedPoiHelperImpl : SidedPoiHelper {
     override fun add(type: PoiType, states: MutableSet<BlockState>) {
+        /*
         (type as PoiTypeAccessor).`cynosure$setBlockStates`(ImmutableSet.builder<BlockState?>()
             .addAll(type.matchingStates)
             .addAll(states)
@@ -19,6 +20,7 @@ public object SidedPoiHelperImpl : SidedPoiHelper {
         states.forEach {
             ForgePoiTypesAccessor.`cynosure$getBlockStates`().put(it, type)
         }
+        */
     }
 
 }
