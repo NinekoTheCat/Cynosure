@@ -1,5 +1,6 @@
 package dev.mayaqq.cynosure.tooltips
 
+import dev.mayaqq.cynosure.events.api.Subscription
 import dev.mayaqq.cynosure.helpers.McFont
 import dev.mayaqq.cynosure.injection.client.javaLocale
 import dev.mayaqq.cynosure.items.extensions.CustomTooltip
@@ -8,6 +9,7 @@ import dev.mayaqq.cynosure.utils.colors.DarkGray
 import dev.mayaqq.cynosure.utils.colors.LightGray
 import dev.mayaqq.cynosure.utils.language.words
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.world.entity.player.Player
@@ -23,11 +25,19 @@ public class DescriptionTooltip(
     private val hiddenLines: MutableList<Component> = mutableListOf()
     private var cachedLanguage: String? = null
 
+    private val pressShiftComponentOff = Component.translatable("tooltip.generic.cynosure.hold_shift.off")
+    private val pressShiftComponentOn = Component.translatable("tooltip.generic.cynosure.hold_shift.on")
+
     override fun MutableList<Component>.modifyTooltip(stack: ItemStack, player: Player?, flags: TooltipFlag) {
         if (checkLanguage()) {
             rebuild(stack.item)
         }
-        addAll(1, lines)
+        if (Screen.hasShiftDown()) {
+            addAll(1, lines)
+            add(1, pressShiftComponentOn)
+        } else {
+            add(1, pressShiftComponentOff)
+        }
     }
 
     private fun rebuild(stack: Item) {
@@ -81,16 +91,20 @@ public class DescriptionTooltip(
         }
 
         var highlighted = false
-        return lines.map { string ->
-            val final = Component.empty()
-            string.split("_").forEach { part ->
-                final.append(Component.literal(part).withStyle(
-                    Style.EMPTY.withColor(
-                        if (highlighted) theme.highlightColor.toInt() else theme.secodaryColor.toInt()
-                    )))
+        return lines.map { line ->
+            val currentComponent = Component.empty()
+            val parts = line.split("_")
+            parts.forEach { part ->
+                currentComponent.append(
+                    Component.literal(part).withStyle(
+                        Style.EMPTY.withColor(
+                            if (highlighted) theme.highlightColor.toInt() else theme.secodaryColor.toInt()
+                        )
+                    )
+                )
                 highlighted = !highlighted
             }
-            final
+            currentComponent
         }
     }
 
