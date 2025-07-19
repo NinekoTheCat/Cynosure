@@ -3,6 +3,8 @@ package dev.mayaqq.cynosure.blocks.poi
 import com.google.common.collect.ImmutableSet
 import dev.mayaqq.cynosure.blocks.poi.PoiHelpers.bStates
 import dev.mayaqq.cynosure.blocks.poi.PoiHelpers.states
+import dev.mayaqq.cynosure.core.Loader
+import dev.mayaqq.cynosure.core.currentLoader
 import dev.mayaqq.cynosure.mixin.accessor.PoiTypeAccessor
 import dev.mayaqq.cynosure.mixin.accessor.PoiTypesInvoker
 import net.minecraft.core.BlockPos
@@ -48,8 +50,9 @@ public fun PoiType.add(states: MutableSet<BlockState>) {
     (this as PoiTypeAccessor).`cynosure$setBlockStates`(ImmutableSet.builder<BlockState?>()
         .addAll(this.matchingStates)
         .addAll(states)
-        .build())
-    PoiTypesInvoker.registerBlockStates(this.holder(), states)
+        .build()
+    )
+    if (currentLoader == Loader.FABRIC) PoiTypesInvoker.registerBlockStates(this.holder(), states)
 }
 
 public fun PoiType.key(): ResourceKey<PoiType>? = BuiltInRegistries.POINT_OF_INTEREST_TYPE.getResourceKey(this).getOrNull()
