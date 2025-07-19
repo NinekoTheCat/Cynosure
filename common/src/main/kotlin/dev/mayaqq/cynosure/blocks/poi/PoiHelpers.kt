@@ -5,6 +5,7 @@ import dev.mayaqq.cynosure.blocks.poi.PoiHelpers.bStates
 import dev.mayaqq.cynosure.blocks.poi.PoiHelpers.states
 import dev.mayaqq.cynosure.core.Loader
 import dev.mayaqq.cynosure.core.currentLoader
+import dev.mayaqq.cynosure.internal.loadPlatform
 import dev.mayaqq.cynosure.mixin.accessor.PoiTypeAccessor
 import dev.mayaqq.cynosure.mixin.accessor.PoiTypesInvoker
 import net.minecraft.core.BlockPos
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.ai.village.poi.PoiRecord
 import net.minecraft.world.entity.ai.village.poi.PoiType
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
+import org.jetbrains.annotations.ApiStatus.NonExtendable
 import java.util.stream.Stream
 import kotlin.jvm.optionals.getOrNull
 
@@ -47,12 +49,7 @@ public fun ResourceKey<PoiType>.add(states: MutableSet<BlockState>) = BuiltInReg
 public fun PoiType.add(vararg blocks: Block) = this.add(states(*blocks))
 
 public fun PoiType.add(states: MutableSet<BlockState>) {
-    (this as PoiTypeAccessor).`cynosure$setBlockStates`(ImmutableSet.builder<BlockState?>()
-        .addAll(this.matchingStates)
-        .addAll(states)
-        .build()
-    )
-    if (currentLoader == Loader.FABRIC) PoiTypesInvoker.registerBlockStates(this.holder(), states)
+    SidedPoiHelper.add(this, states)
 }
 
 public fun PoiType.key(): ResourceKey<PoiType>? = BuiltInRegistries.POINT_OF_INTEREST_TYPE.getResourceKey(this).getOrNull()
@@ -62,3 +59,10 @@ public fun PoiManager.inRange(poi: PoiType, pos: BlockPos, range: Int): Stream<P
     return this.getInRange({it.`is`(poi.key()?: return@getInRange false)}, pos, range, PoiManager.Occupancy.ANY)
 }
 public fun PoiManager.anyInRange(poi: PoiType, pos: BlockPos, range: Int): Boolean = this.inRange(poi, pos, range).toList().isNotEmpty()
+
+@NonExtendable
+public interface SidedPoiHelper {
+    public companion object Impl : SidedPoiHelper by loadPlatform()
+
+    public fun add(poi: PoiType, states: MutableSet<BlockState>)
+}

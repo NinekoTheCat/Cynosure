@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "cynosure.refmap.json",
   "mixins": [
+    "ForgePoiTypesAccessor",
     "PiglinAiMixin"
   ],
   "client": [
