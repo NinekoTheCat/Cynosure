@@ -44,7 +44,9 @@ public object PoiHelpers {
 public fun Block.states(): MutableSet<BlockState> = bStates(this)
 
 public fun ResourceKey<PoiType>.add(vararg blocks: Block) = this.add(states(*blocks))
-public fun ResourceKey<PoiType>.add(states: MutableSet<BlockState>) = BuiltInRegistries.POINT_OF_INTEREST_TYPE.get(this)?.add(states)
+public fun ResourceKey<PoiType>.add(states: MutableSet<BlockState>) = BuiltInRegistries.POINT_OF_INTEREST_TYPE
+    .getOptional(this)
+    .getOrNull()?.add(states)
 
 public fun PoiType.add(vararg blocks: Block) = this.add(states(*blocks))
 
