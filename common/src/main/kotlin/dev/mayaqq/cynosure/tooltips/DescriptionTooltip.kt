@@ -55,7 +55,7 @@ public class DescriptionTooltip(
 
     public object Themes {
         @JvmField
-        public val Default: Theme = Theme(DarkGray, LightGray, Color(0xAA00AAu))
+        public val Default: Theme = Theme(DarkGray, LightGray, Color(0x84597Eu))
     }
 
     private fun Component.format(theme: Theme): List<Component> {
@@ -75,7 +75,7 @@ public class DescriptionTooltip(
                     }
                 }
                 totalWidth += width
-                currentLine += " $word"
+                currentLine += word
             }
             if (totalWidth > 0) add(currentLine)
         }
