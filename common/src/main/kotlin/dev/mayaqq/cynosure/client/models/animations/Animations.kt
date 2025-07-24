@@ -1,8 +1,21 @@
 package dev.mayaqq.cynosure.client.models.animations
 
+import com.mojang.serialization.Codec
+import com.mojang.serialization.Keyable
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import com.teamresourceful.bytecodecs.defaults.EnumCodec
+import dev.mayaqq.cynosure.client.models.ModelElement
+import dev.mayaqq.cynosure.client.models.ModelElementFace
+import dev.mayaqq.cynosure.client.models.ModelElementRotation
+import dev.mayaqq.cynosure.client.models.animations.Animation.Target
+import dev.mayaqq.cynosure.core.codecs.Codecs
+import dev.mayaqq.cynosure.core.codecs.forGetter
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import net.minecraft.core.Direction
+import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.Mth
+import net.minecraft.util.StringRepresentable
 import org.joml.Vector3f
 import org.joml.Vector3fc
 import kotlin.math.max
@@ -11,7 +24,18 @@ import kotlin.math.min
 private val LOCAL_VEC_CACHE: ThreadLocal<Vector3f> = ThreadLocal.withInitial(::Vector3f)
 
 @Serializable
-public data class AnimationDefinition(val duration: Float, val looping: Boolean, val bones: Map<String, List<Animation>>)
+public data class AnimationDefinition(val duration: Float, val looping: Boolean, val bones: Map<String, List<Animation>>) {
+    public companion object {
+        @JvmField
+        public val CODEC: Codec<AnimationDefinition> = RecordCodecBuilder.create { it.group(
+            Codec.FLOAT.fieldOf("duration").forGetter(AnimationDefinition::duration),
+            Codec.BOOL.fieldOf("looping").forGetter(AnimationDefinition::looping),
+            //TODO: This probably has to be simple map but I got no idea how to properly use keyable lmao
+            Codec.unboundedMap(Codec.STRING, Animation.CODEC.listOf())
+                .fieldOf("bones").forGetter(AnimationDefinition::bones)
+        ).apply(it, ::AnimationDefinition) }
+    }
+}
 
 @Serializable
 public data class Animation(val target: Target, val keyframes: List<Keyframe>) {
@@ -29,14 +53,36 @@ public data class Animation(val target: Target, val keyframes: List<Keyframe>) {
         };
 
         public abstract fun apply(animatable: Animatable, value: Vector3fc)
+
+        public companion object {
+            public val CODEC: Codec<Target> = RecordCodecBuilder.create { it.group(
+                Codec.INT.fieldOf("index").forGetter { target -> target.ordinal }
+            ).apply(it, Target.entries::get)}
+        }
     }
 
+    public companion object {
+        @JvmField
+        public val CODEC: Codec<Animation> = RecordCodecBuilder.create { it.group(
+            Target.CODEC.fieldOf("target").forGetter(Animation::target),
+            Keyframe.CODEC.listOf().fieldOf("keyframes").forGetter(Animation::keyframes)
+        ).apply(it, ::Animation) }
+    }
 }
 
 @Serializable
 public data class Keyframe(val timestamp: Float, val target: @Serializable(ConfiguredVecSerializer::class) Vector3f, val interpolation: Interpolation) {
     public fun interface Interpolation {
         public fun apply(vector: Vector3f, delta: Float, keyframes: List<Keyframe>, currentFrame: Int, targetFrame: Int, strength: Float): Vector3f
+    }
+
+    public companion object {
+        @JvmField
+        public val CODEC: Codec<Keyframe> = RecordCodecBuilder.create { it.group(
+            Codec.FLOAT.fieldOf("timestamp").forGetter(Keyframe::timestamp),
+            ExtraCodecs.VECTOR3F.fieldOf("traget").forGetter(Keyframe::target),
+            TODO("Interpolation CODEC here? I have no idea what sery has been doing :sob:")
+        ).apply(it, ::Keyframe) }
     }
 }
 

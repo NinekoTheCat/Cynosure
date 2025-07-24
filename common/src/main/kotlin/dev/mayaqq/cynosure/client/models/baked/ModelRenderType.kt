@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.RenderType
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.StringRepresentable
 
-
 public enum class ModelRenderType(private val func: (ResourceLocation) -> RenderType, private val serialName: String) : StringRepresentable {
     SOLID(RenderType::entitySolid, "solid"),
     CUTOUT(RenderType::entityCutout, "cutout"),

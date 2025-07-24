@@ -7,15 +7,17 @@ import dev.mayaqq.cynosure.client.models.baked.ModelRenderType
 import dev.mayaqq.cynosure.core.codecs.Codecs
 import dev.mayaqq.cynosure.core.codecs.fieldOf
 import dev.mayaqq.cynosure.utils.Either
+import dev.mayaqq.cynosure.utils.serialization.defaults.Vector3fSerializer
+import kotlinx.serialization.Serializable
 import net.minecraft.core.Direction
 import net.minecraft.util.ExtraCodecs
 import org.joml.Vector3f
 
-
+@Serializable
 public data class ModelElementRotation(
     val angle: Float,
     val axis: Direction.Axis,
-    val origin: Vector3f,
+    @Serializable(with = Vector3fSerializer::class) val origin: Vector3f,
     val rescale: Boolean
 ) {
     public companion object {
@@ -28,6 +30,7 @@ public data class ModelElementRotation(
     }
 }
 
+@Serializable
 public data class ModelElementFace(
     val uv: FloatArray,
     val rotation: Float,
@@ -76,9 +79,10 @@ public data class ModelElementFace(
     }
 }
 
+@Serializable
 public data class ModelElement(
-    val from: Vector3f,
-    val to: Vector3f,
+    @Serializable(with = Vector3fSerializer::class) val from: Vector3f,
+    @Serializable(with = Vector3fSerializer::class) val to: Vector3f,
     val faces: Map<Direction, ModelElementFace>,
     val rotation: ModelElementRotation? = null,
     val shade: Boolean = true
@@ -97,10 +101,11 @@ public data class ModelElement(
     }
 }
 
+@Serializable
 public data class ModelElementGroup(
     val name: String,
     val renderType: ModelRenderType? = null,
-    val origin: Vector3f,
+    @Serializable(with = Vector3fSerializer::class) val origin: Vector3f,
     val indices: List<Int>,
     val subgroups: List<ModelElementGroup>
 ) {
@@ -124,6 +129,7 @@ public data class ModelElementGroup(
 private val ModelElementGroup.indicesAndSubgroubs: List<Either<Int, ModelElementGroup>>
     get() = indices.map { Either.Left(it) } + subgroups.map { Either.Right(it) }
 
+@Serializable
 public data class ModelData(
     val renderType: ModelRenderType = ModelRenderType.CUTOUT,
     val elements: List<ModelElement>,
