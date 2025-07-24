@@ -1,5 +1,6 @@
 package dev.mayaqq.cynosure.tooltips
 
+import dev.mayaqq.cynosure.Cynosure
 import dev.mayaqq.cynosure.events.api.Subscription
 import dev.mayaqq.cynosure.helpers.McFont
 import dev.mayaqq.cynosure.injection.client.javaLocale
@@ -94,6 +95,7 @@ public class DescriptionTooltip(
         return lines.map { line ->
             val currentComponent = Component.empty()
             val parts = line.split("_")
+            val size = parts.size
             parts.forEach { part ->
                 currentComponent.append(
                     Component.literal(part).withStyle(
@@ -102,7 +104,7 @@ public class DescriptionTooltip(
                         )
                     )
                 )
-                highlighted = !highlighted
+                if (size < 1) highlighted = !highlighted
             }
             currentComponent
         }
