@@ -6,6 +6,10 @@ import kotlin.contracts.contract
 
 public typealias Couple<T> = Pair<T, T>
 
+public operator fun <T> Couple<T>.get(second: Boolean) = if (second) this.second else this.first
+
+public operator fun <T> Couple<T>.get(index: Int) = get(index > 0)
+
 public operator fun <T> Couple<T>.iterator(): Iterator<T> = Coupleater(this)
 
 public operator fun <T> Couple<T>.contains(item: T): Boolean =

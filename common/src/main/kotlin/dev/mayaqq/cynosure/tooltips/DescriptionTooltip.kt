@@ -1,22 +1,22 @@
 package dev.mayaqq.cynosure.tooltips
 
-import dev.mayaqq.cynosure.Cynosure
-import dev.mayaqq.cynosure.events.api.Subscription
 import dev.mayaqq.cynosure.helpers.McFont
 import dev.mayaqq.cynosure.injection.client.javaLocale
 import dev.mayaqq.cynosure.items.extensions.CustomTooltip
+import dev.mayaqq.cynosure.utils.Couple
 import dev.mayaqq.cynosure.utils.colors.Color
 import dev.mayaqq.cynosure.utils.colors.DarkGray
 import dev.mayaqq.cynosure.utils.colors.LightGray
+import dev.mayaqq.cynosure.utils.get
 import dev.mayaqq.cynosure.utils.language.words
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.Style
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
+
 
 public class DescriptionTooltip(
     private val theme: Theme
@@ -61,12 +61,25 @@ public class DescriptionTooltip(
     public data class Theme(
         val primaryColor: Color,
         val secodaryColor: Color,
-        val highlightColor: Color
-    )
+        val highlightColor: Color,
+        val indent: Int
+    ) {
+        public companion object {
+            @JvmField
+            public val Default: Theme = Theme(
+                DarkGray,
+                LightGray,
+                Color(0x84597Eu),
+                2
+            )
+        }
 
-    public object Themes {
-        @JvmField
-        public val Default: Theme = Theme(DarkGray, LightGray, Color(0x84597Eu))
+        public fun with(
+            primaryColor: Color = this.primaryColor,
+            secondaryColor: Color = this.secodaryColor,
+            highlightColor: Color = this.highlightColor,
+            indent: Int = this.indent
+            ): Theme = Theme(primaryColor, secondaryColor, highlightColor, indent)
     }
 
     private fun Component.format(theme: Theme): List<Component> {
@@ -91,23 +104,27 @@ public class DescriptionTooltip(
             if (totalWidth > 0) add(currentLine)
         }
 
-        var highlighted = false
-        return lines.map { line ->
-            val currentComponent = Component.empty()
-            val parts = line.split("_")
-            val size = parts.size
-            parts.forEach { part ->
-                currentComponent.append(
-                    Component.literal(part).withStyle(
-                        Style.EMPTY.withColor(
-                            if (highlighted) theme.highlightColor.toInt() else theme.secodaryColor.toInt()
-                        )
-                    )
-                )
-                if (size < 1) highlighted = !highlighted
+
+        // Format
+        val lineStart = Component.literal(" ".repeat(theme.indent))
+        lineStart.withStyle{it.withColor(theme.primaryColor.toInt())}
+        val formattedLines = mutableListOf<Component>()
+        val styles: Couple<Color> = theme.primaryColor to theme.highlightColor
+
+        var currentlyHighlighted = false
+        for (string in lines) {
+            val currentComponent = lineStart.plainCopy()
+            val split = string.split("_".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            for (part in split) {
+                currentComponent.append(Component.literal(part).withStyle{it.withColor(styles[currentlyHighlighted].toInt())})
+                currentlyHighlighted = !currentlyHighlighted
             }
-            currentComponent
+
+            formattedLines.add(currentComponent)
+            currentlyHighlighted = !currentlyHighlighted
         }
+
+        return formattedLines
     }
 
     public companion object {
