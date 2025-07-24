@@ -70,7 +70,7 @@ public class DescriptionTooltip(
                 DarkGray,
                 LightGray,
                 Color(0x84597Eu),
-                2
+                0
             )
         }
 
