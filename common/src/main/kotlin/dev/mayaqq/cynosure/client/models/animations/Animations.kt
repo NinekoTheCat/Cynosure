@@ -8,7 +8,9 @@ import dev.mayaqq.cynosure.client.models.ModelElement
 import dev.mayaqq.cynosure.client.models.ModelElementFace
 import dev.mayaqq.cynosure.client.models.ModelElementRotation
 import dev.mayaqq.cynosure.client.models.animations.Animation.Target
+import dev.mayaqq.cynosure.client.models.animations.registry.Interpolations
 import dev.mayaqq.cynosure.core.codecs.Codecs
+import dev.mayaqq.cynosure.core.codecs.fieldOf
 import dev.mayaqq.cynosure.core.codecs.forGetter
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -30,7 +32,6 @@ public data class AnimationDefinition(val duration: Float, val looping: Boolean,
         public val CODEC: Codec<AnimationDefinition> = RecordCodecBuilder.create { it.group(
             Codec.FLOAT.fieldOf("duration").forGetter(AnimationDefinition::duration),
             Codec.BOOL.fieldOf("looping").forGetter(AnimationDefinition::looping),
-            //TODO: This probably has to be simple map but I got no idea how to properly use keyable lmao
             Codec.unboundedMap(Codec.STRING, Animation.CODEC.listOf())
                 .fieldOf("bones").forGetter(AnimationDefinition::bones)
         ).apply(it, ::AnimationDefinition) }
@@ -55,9 +56,10 @@ public data class Animation(val target: Target, val keyframes: List<Keyframe>) {
         public abstract fun apply(animatable: Animatable, value: Vector3fc)
 
         public companion object {
-            public val CODEC: Codec<Target> = RecordCodecBuilder.create { it.group(
-                Codec.INT.fieldOf("index").forGetter { target -> target.ordinal }
-            ).apply(it, Target.entries::get)}
+            public val CODEC: Codec<Target> = Codec.STRING.xmap(
+                fun(s) = Target.valueOf(s),
+                fun(t) = Target.serializer().descriptor.getElementName(t.ordinal)
+            )
         }
     }
 
@@ -80,8 +82,8 @@ public data class Keyframe(val timestamp: Float, val target: @Serializable(Confi
         @JvmField
         public val CODEC: Codec<Keyframe> = RecordCodecBuilder.create { it.group(
             Codec.FLOAT.fieldOf("timestamp").forGetter(Keyframe::timestamp),
-            ExtraCodecs.VECTOR3F.fieldOf("traget").forGetter(Keyframe::target),
-            TODO("Interpolation CODEC here? I have no idea what sery has been doing :sob:")
+            ExtraCodecs.VECTOR3F.fieldOf("target").forGetter(Keyframe::target),
+            Interpolations.REGISTRY.codec() fieldOf "interpolations" forGetter Keyframe::interpolation
         ).apply(it, ::Keyframe) }
     }
 }

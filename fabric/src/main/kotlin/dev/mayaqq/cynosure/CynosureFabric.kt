@@ -13,7 +13,6 @@ import net.fabricmc.loader.api.ModContainer
 import net.fabricmc.loader.api.metadata.CustomValue.CvArray
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
-import kotlin.jvm.internal.Reflection
 import kotlin.reflect.typeOf
 
 internal object CynosureFabric {
