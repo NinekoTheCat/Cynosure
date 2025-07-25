@@ -6,11 +6,11 @@ import net.minecraft.core.Vec3i
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
 import org.joml.*
+import kotlin.math.floor
 
-// TODO: Once bigger put this in cynosure
-public fun Vector3fc.toBlockPos(): BlockPos = BlockPos(this.x().toInt(), this.y().toInt(), this.z().toInt())
-public fun Vector3dc.toBlockPos(): BlockPos = BlockPos(this.x().toInt(), this.y().toInt(), this.z().toInt())
-public fun Vec3.toBlockPos(): BlockPos = BlockPos(this.x().toInt(), this.y().toInt(), this.z().toInt())
+public fun Vector3fc.toBlockPos(): BlockPos = BlockPos(floor(this.x()).toInt(), floor(this.y()).toInt(), floor(this.z()).toInt())
+public fun Vector3dc.toBlockPos(): BlockPos = BlockPos(floor(this.x()).toInt(), floor(this.y()).toInt(), floor(this.z()).toInt())
+public fun Vec3.toBlockPos(): BlockPos = BlockPos(floor(this.x()).toInt(), floor(this.y()).toInt(), floor(this.z()).toInt())
 public fun Vec3i.toBlockPos(): BlockPos = BlockPos(this.x, this.y, this.z)
 
 public fun Vec3i.toVector3f(): Vector3f = Vector3f(this.x.toFloat(), this.y.toFloat(), this.z.toFloat())
