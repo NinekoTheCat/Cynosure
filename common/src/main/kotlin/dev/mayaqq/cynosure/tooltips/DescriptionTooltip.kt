@@ -65,7 +65,6 @@ public class DescriptionTooltip(
         val indent: Int
     ) {
         public companion object {
-            @JvmField
             public val Default: Theme = Theme(
                 DarkGray,
                 LightGray,
