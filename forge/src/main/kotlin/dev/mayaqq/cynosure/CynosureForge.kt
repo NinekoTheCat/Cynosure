@@ -18,7 +18,7 @@ import net.minecraftforge.forgespi.locating.IModFile
 
 @Mod(MODID)
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-public object CynosureForge {
+public class CynosureForge {
 
     init {
         Cynosure.init()

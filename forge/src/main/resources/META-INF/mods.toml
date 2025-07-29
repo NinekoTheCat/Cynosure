@@ -1,5 +1,5 @@
 
-modLoader="kotlinforforge" #mandatory
+modLoader="javafml" #mandatory
 loaderVersion="[4.11,)" #mandatory (24 is current forge version)
 issueTrackerURL="https://github.com/MayaqqDev/Cynosure/issues" #optional
 displayURL="https://github.com/MayaqqDev/Cynosure/issues" #optional
@@ -24,12 +24,5 @@ side="BOTH"
 modId="minecraft"
 mandatory=true
 versionRange="[1.20,1.20.1]"
-ordering="NONE"
-side="BOTH"
-
-[[dependencies.$mod_id]]
-modId="kotlinforforge"
-mandatory=true
-versionRange="[4.11,)"
 ordering="NONE"
 side="BOTH"
