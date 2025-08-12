@@ -12,6 +12,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 public class CodecRecipeSerializer<T : Recipe<*>>(
+    public val name: String,
     private val codec: (ResourceLocation) -> Codec<T>,
     private val networkCodec: (ResourceLocation) -> ByteCodec<T>
 ) : RecipeSerializer<T> {
@@ -29,6 +30,18 @@ public class CodecRecipeSerializer<T : Recipe<*>>(
 
     override fun toNetwork(var1: FriendlyByteBuf, var2: T) {
         networkCodec(var2.id).encode(var2, var1)
+    }
+
+    /**
+     * Writes [recipe] to [writeTo] as JSON, intended for encoding recipes
+     * into a [net.minecraft.data.recipes.FinishedRecipe]'s output.
+     */
+    public fun toJson(recipeId: ResourceLocation, writeTo: JsonObject, recipe: T) {
+        val obj = codec(recipeId).encodeStart(JsonOps.INSTANCE,recipe).getOrThrow(true)
+        { error("Error writing codec recipe: $it") }.asJsonObject
+        obj.entrySet().forEach {
+            writeTo.add(it.key,it.value)
+        }
     }
 
 }

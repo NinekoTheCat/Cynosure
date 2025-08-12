@@ -25,7 +25,7 @@ public inline fun <T : Recipe<*>> Registrar<RecipeSerializer<*>>.codecSerializer
     noinline codec: (ResourceLocation) -> Codec<T>,
     noinline networkCodec: (ResourceLocation) -> ByteCodec<T>,
     builder: GenericBuilder<RecipeSerializer<*>, CodecRecipeSerializer<T>>.() -> Unit
-): RegistryEntry<CodecRecipeSerializer<T>> = entry(name, { CodecRecipeSerializer(codec, networkCodec) }).apply(builder).register()
+): RegistryEntry<CodecRecipeSerializer<T>> = entry(name, { CodecRecipeSerializer(name,codec, networkCodec) }).apply(builder).register()
 
 public class SimpleRecipeType<T : Recipe<*>> : RecipeType<T> {
     override fun toString(): String = "[${BuiltInRegistries.RECIPE_TYPE.getKey(this)}]"

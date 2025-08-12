@@ -1,11 +1,14 @@
 @file:Mod.EventBusSubscriber(modid = MODID)
 package dev.mayaqq.cynosure.events
 
+import dev.mayaqq.cynosure.Cynosure
 import dev.mayaqq.cynosure.MODID
 import dev.mayaqq.cynosure.events.api.post
 import dev.mayaqq.cynosure.events.block.BlockEvent
 import dev.mayaqq.cynosure.events.command.CommandExecuteEvent
 import dev.mayaqq.cynosure.events.command.CommandRegistrationEvent
+import dev.mayaqq.cynosure.events.datagen.CynosureDataGenerator
+import dev.mayaqq.cynosure.events.datagen.DataGenerationRegistrationEvent
 import dev.mayaqq.cynosure.events.entity.EntityCreatedEvent
 import dev.mayaqq.cynosure.events.entity.LivingEntityEvent
 import dev.mayaqq.cynosure.events.entity.MountEvent
@@ -24,6 +27,7 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.level.Level
 import net.minecraftforge.common.util.LogicalSidedProvider
+import net.minecraftforge.data.event.GatherDataEvent
 import net.minecraftforge.event.AddReloadListenerEvent
 import net.minecraftforge.event.CommandEvent
 import net.minecraftforge.event.OnDatapackSyncEvent
@@ -250,4 +254,9 @@ public fun onPlayerTick(event: PlayerTickEvent) {
         Phase.START -> dev.mayaqq.cynosure.events.entity.player.PlayerTickEvent.Begin(event.player).post(context = event)
         Phase.END -> dev.mayaqq.cynosure.events.entity.player.PlayerTickEvent.End(event.player).post(context = event)
     }
+}
+
+@SubscribeEvent
+public fun gatherDataGenerators(event: GatherDataEvent) {
+    DataGenerationRegistrationEvent(CynosureDataGenerator(event.generator,event.generator.packOutput)).post()
 }
